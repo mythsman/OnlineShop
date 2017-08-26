@@ -65,6 +65,36 @@
                     </div>
                 </div>
 
+				<div class="form-group">
+                    <label for="address" class="cols-sm-2 control-label">Address</label>
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-home fa" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control" th:value="${user.address}" id="address" name="address" roleId="address"  placeholder="Enter your address" required="required"/>
+                        </div>
+                    </div>
+                </div>
+
+				<div class="form-group">
+                    <label for="postcode" class="cols-sm-2 control-label">Postal Code</label>
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control" th:value="${user.postcode}" id="postcode" name="postcode" roleId="postcode"  placeholder="Enter your postcode" required="required"/>
+                        </div>
+                    </div>
+                </div>
+
+				<div class="form-group">
+                    <label for="city" class="cols-sm-2 control-label">City</label>
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-building fa" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control" th:value="${user.city}" id="city" name="city" roleId="city"  placeholder="Enter your city" required="required"/>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label for="password" class="cols-sm-2 control-label">Password</label>
                     <div class="cols-sm-10">
@@ -72,20 +102,15 @@
                             <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
                             <input type="password" class="form-control" th:value="${user.password}" id="password" name="password" roleId="password"  placeholder="Enter your Password" required="required"/>
                         </div>
-                        <div class="checkbox">
-                            <label>
-                                <input id="showPassword" type="checkbox" />Show Password
-                            </label>
-                        </div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="confirm" class="cols-sm-2 control-label">Confirm Secret</label>
+                    <label for="passwordConfirmation" class="cols-sm-2 control-label">Confirm Secret</label>
                     <div class="cols-sm-10">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
-                            <input type="secret" class="form-control" name="confirm" roleId="confirm"  placeholder="Confirm your Secret" required="required"/>
+                            <input type="password" class="form-control" th:value="${user.passwordConfirmation}" id="passwordConfirmation" name="passwordConfirmation" roleId="passwordConfirmation"  placeholder="Confirm your Password" required="required"/>
                         </div>
                     </div>
                 </div>
