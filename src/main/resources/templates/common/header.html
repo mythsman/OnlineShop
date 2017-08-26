@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:fragment="common-header">
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Online Shop</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="/css/bootstrap-grid.css" rel="stylesheet" />
+    <link href="/css/bootstrap-grid.min.css" rel="stylesheet" />
+    <link href="/css/bootstrap-reboot.css" rel="stylesheet" />
+    <link href="/css/bootstrap.css" rel="stylesheet" />
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Website Font style -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css" />
+
+    <!-- Custom CSS -->
+    <link href="/css/shop-homepage.css" rel="stylesheet" />
+</head>
+
+  <body>
+
+    <!-- Navigation -->
+    <div th:fragment="navbar">
+	    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+	      <div class="container">
+	        <a class="navbar-brand" href="#">Start Bootstrap</a>
+	        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+	          <span class="navbar-toggler-icon"></span>
+	        </button>
+	        <div class="collapse navbar-collapse" id="navbarResponsive">
+	          <ul class="navbar-nav ml-auto">
+	            <li class="nav-item active">
+	              <a class="nav-link" href="#">Home
+	                <span class="sr-only">(current)</span>
+	              </a>
+	            </li>
+	            <li class="nav-item">
+	              <a class="nav-link" href="#">About</a>
+	            </li>
+	            <li class="nav-item">
+	              <a class="nav-link" href="#">Services</a>
+	            </li>
+	            <li class="nav-item">
+	              <a class="nav-link" href="#">Contact</a>
+	            </li>
+	            <li class="nav-item">
+	            	<a class="nav-link" th:href="@{/users/signup}">Sign Up</a>
+	            </li>
+	          </ul>
+	        </div>
+	      </div>
+	    </nav>
+	</div>
+    <!-- /.container -->
+    
+    <div th:fragment="body-bottom-footer">
+    	<!-- Footer -->
+	    <footer class="py-5 bg-dark">
+	      <div class="container">
+	        <p class="m-0 text-center text-white">Copyright &copy; darglk 2017</p>
+	      </div>
+	      <!-- /.container -->
+	    </footer>
+    </div>
+    
+    <div th:fragment="body-bottom-scripts">
+	    <!-- jQuery -->
+	    <script src="/js/jquery.js"></script>
+		<script src="/js/jquery.min.js"></script>
+	    <!-- Bootstrap Core JavaScript -->
+	    <script src="/js/bootstrap.js"></script>
+	    <script src="/js/bootstrap.min.js"></script>
+		
+		<!-- popper -->
+		<script src="/js/popper.js"></script>
+		<script src="/js/popper.min.js"></script>
+		
+	</div>
+</body>
+</html>
