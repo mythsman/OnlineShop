@@ -29,11 +29,4 @@ public class HomeControllerTest {
 				.andExpect(status().isOk()).andExpect(view().name("home"));
 	}
 	
-	@Test
-	public void testGetRegisterPage() throws Exception {
-		mvc.perform(get("/signup")
-				.contentType(MediaType.TEXT_HTML))
-		.andExpect(status().isOk())
-		.andExpect(view().name("signup"));
-	}
 }

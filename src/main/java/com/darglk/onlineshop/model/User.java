@@ -26,8 +26,8 @@ public class User {
 	@Column(name="firstname")
 	private String firstName;
 	
-	@Column(name="secondName")
-	private String secondName;
+	@Column(name="lastname")
+	private String lastName;
 	
 	@Column(name="email")
 	private String emailAddress;
@@ -59,7 +59,7 @@ public class User {
 		super();
 		this.userName = userName;
 		this.firstName = firstName;
-		this.secondName = secondName;
+		this.lastName = secondName;
 		this.emailAddress = emailAddress;
 		this.password = password;
 		this.passwordConfirmation = passwordConfirmation;
@@ -96,12 +96,12 @@ public class User {
 		this.firstName = firstName;
 	}
 
-	public String getSecondName() {
-		return secondName;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setSecondName(String secondName) {
-		this.secondName = secondName;
+	public void setLastName(String secondName) {
+		this.lastName = secondName;
 	}
 
 	public String getEmailAddress() {
