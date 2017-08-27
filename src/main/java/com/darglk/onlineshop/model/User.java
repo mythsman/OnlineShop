@@ -9,6 +9,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name="user")
@@ -20,34 +24,53 @@ public class User {
 	@Column(name="id")
 	private Long id;
 	
-	@Column(name="username")
+	@Column(name="username", unique=true)
+	@NotEmpty(message="username cannot be empty.")
+	@Pattern(regexp="^[a-zA-Z0-9_-]{3,15}", message="Invalid user name (only alphanumeric characters, 3-15 length).")
 	private String userName;
 	
+	@NotEmpty(message="first name cannot be empty.")
 	@Column(name="firstname")
 	private String firstName;
 	
+	@NotEmpty(message="last name cannot be empty.")
 	@Column(name="lastname")
 	private String lastName;
 	
-	@Column(name="email")
+	@Email
+	@NotEmpty(message="email name cannot be empty.")
+	@Column(name="email", unique=true)
 	private String emailAddress;
 	
+	@Pattern(regexp="(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{6,60}", message="Password is invalid. It should contain at least one: digit, "
+			+ "upper, lower case letter, special character and its length should be in range from 6 to 60 chars")
+	@NotEmpty(message="password cannot be empty.")
 	@Column(name="password")
 	private String password;
 	
 	@Transient
+	@NotEmpty
+	@Pattern(regexp="(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{6,60}", message="Password confirmation is invalid. It should contain at least one: digit, "
+			+ "upper, lower case letter, special character and its length should be in range from 6 to 60 chars")
 	private String passwordConfirmation;
 	
-	@Column(name="phone")
+	
+	@Column(name="phone", unique=true)
+	@NotEmpty(message="phone number cannot be empty.")
+	@Pattern(regexp="(^$|[0-9]{10})")
 	private String phoneNumber;
 	
 	@Column(name="address")
+	@NotEmpty(message="address cannot be empty.")
 	private String address;
 	
 	@Column(name="city")
+	@NotEmpty(message="city cannot be empty.")
 	private String city;
 	
+	@NotEmpty(message="post code cannot be empty.")
 	@Column(name="postcode")
+	@Pattern(regexp="[0-9]{2}\\-[0-9]{3}") //Polish zipcode
 	private String postcode;
 	
 	@Column(name="enabled")
