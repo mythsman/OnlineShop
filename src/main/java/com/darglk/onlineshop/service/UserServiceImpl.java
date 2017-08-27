@@ -1,53 +1,115 @@
 package com.darglk.onlineshop.service;
 
 import java.util.List;
-
-import javax.transaction.Transactional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.darglk.onlineshop.dao.UserDAO;
+import com.darglk.onlineshop.dao.RoleDao;
+import com.darglk.onlineshop.dao.UserDao;
 import com.darglk.onlineshop.model.User;
+import com.darglk.onlineshop.security.UserRole;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+	private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 	
 	@Autowired
-	private UserDAO userDAO;
+	private UserDao userDao;
 	
-	@Override
-	@Transactional
-	public void saveUser(User user) {
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		userDAO.saveUser(user);
-	}
-	
-	@Override
-	@Transactional
-	public User getUser(Long userId) {
-		return userDAO.getUser(userId);
-	}
-	
-	@Override
-	@Transactional
-	public void deleteUser(int userId) {
-		userDAO.deleteUser(userId);
-	}
-	
-	@Override
-	@Transactional
-	public List<User> getByUsername(String username) {
-		return userDAO.getByUsername(username);
-	}
+	@Autowired
+    private RoleDao roleDao;
 
-	@Override
-	@Transactional
-	public List<User> getByEmail(String email) {
-		return userDAO.getByEmail(email);
-	}
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+	
+    
+	public void save(User user) {
+        userDao.save(user);
+    }
+
+    public User findByUsername(String username) {
+        return userDao.findByUsername(username);
+    }
+
+    public User findByEmail(String email) {
+        return userDao.findByEmail(email);
+    }
+        
+    public User createUser(User user, Set<UserRole> userRoles) {
+        User localUser = userDao.findByUsername(user.getUsername());
+
+        if (localUser != null) {
+            LOG.info("User with username {} already exist. Nothing will be done. ", user.getUsername());
+        } else {
+            String encryptedPassword = passwordEncoder.encode(user.getPassword());
+            user.setPassword(encryptedPassword);
+
+            for (UserRole ur : userRoles) {
+                roleDao.save(ur.getRole());
+            }
+
+            user.getUserRoles().addAll(userRoles);
+
+            localUser = userDao.save(user);
+        }
+
+        return localUser;
+    }
+    
+    public boolean checkUserExists(String username, String email){
+        if (checkUsernameExists(username) || checkEmailExists(username)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean checkUsernameExists(String username) {
+        if (null != findByUsername(username)) {
+            return true;
+        }
+
+        return false;
+    }
+    
+    public boolean checkEmailExists(String email) {
+        if (null != findByEmail(email)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public User saveUser (User user) {
+        return userDao.save(user);
+    }
+    
+    public List<User> findUserList() {
+        return (List<User>) userDao.findAll();
+    }
+
+    public void enableUser (String username) {
+        User user = findByUsername(username);
+        user.setEnabled(true);
+        userDao.save(user);
+    }
+
+    public void disableUser (String username) {
+        User user = findByUsername(username);
+        user.setEnabled(false);
+        System.out.println(user.isEnabled());
+        userDao.save(user);
+        System.out.println(username + " is disabled.");
+    }
+
 }

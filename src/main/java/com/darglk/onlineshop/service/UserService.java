@@ -1,19 +1,32 @@
 package com.darglk.onlineshop.service;
 
 import java.util.List;
+import java.util.Set;
 
 import com.darglk.onlineshop.model.User;
+import com.darglk.onlineshop.security.UserRole;
+
 
 public interface UserService {
+	User findByUsername(String username);
 
-	void saveUser(User user);
+    User findByEmail(String email);
 
-	User getUser(Long userId);
+    boolean checkUserExists(String username, String email);
 
-	void deleteUser(int userId);
+    boolean checkUsernameExists(String username);
 
-	List<User> getByUsername(String username);
+    boolean checkEmailExists(String email);
+    
+    void save (User user);
+    
+    User createUser(User user, Set<UserRole> userRoles);
+    
+    User saveUser (User user); 
+    
+    List<User> findUserList();
 
-	List<User> getByEmail(String email);
+    void enableUser (String username);
 
+    void disableUser (String username);
 }
