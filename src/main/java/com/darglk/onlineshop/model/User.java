@@ -55,11 +55,11 @@ public class User implements UserDetails{
     private String passwordConfirmation;
     
     @Column(name="firstname")
-    @NotEmpty(message="firstname address cannot be empty.")
+    @NotEmpty(message="firstname cannot be empty.")
     private String firstName;
     
     @Column(name="lastname")
-    @NotEmpty(message="lastname address cannot be empty.")
+    @NotEmpty(message="lastname cannot be empty.")
     private String lastName;
 
     @Column(name = "email", nullable = false, unique = true)
@@ -68,7 +68,7 @@ public class User implements UserDetails{
     
     @Column(name = "phone", nullable = false, unique = true)
     @NotEmpty(message="phone number cannot be empty.")
-	@Pattern(regexp="(^$|[0-9]{9})")
+	@Pattern(regexp="(^$|[0-9]{9})", message="Phone number format is not correct (NNNNNNNNN eg.: 700700700).")
     private String phone;
 
     @Column(name="address")
@@ -81,7 +81,7 @@ public class User implements UserDetails{
 	
 	@NotEmpty(message="post code cannot be empty.")
 	@Column(name="postcode")
-	@Pattern(regexp="[0-9]{2}\\-[0-9]{3}") //Polish zipcode
+	@Pattern(regexp="[0-9]{2}\\-[0-9]{3}", message="Post code is incorrect (XX-XXX eg. 20-199).") //Polish zipcode
 	private String postcode;
     
     private boolean enabled=true;

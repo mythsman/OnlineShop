@@ -112,4 +112,16 @@ public class UserServiceImpl implements UserService {
         System.out.println(username + " is disabled.");
     }
 
+	@Override
+	public boolean checkPhoneNumberExists(String phone) {
+		if (null != findByPhone(phone)) {
+			return true;
+		}
+		return false;
+	}
+
+	public Object findByPhone(String phone) {
+		return userDao.findByPhone(phone);
+	}
+
 }

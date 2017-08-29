@@ -29,4 +29,6 @@ public interface UserService {
     void enableUser (String username);
 
     void disableUser (String username);
+
+	boolean checkPhoneNumberExists(String phone);
 }

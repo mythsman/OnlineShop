@@ -8,4 +8,5 @@ import com.darglk.onlineshop.model.User;
 public interface UserDao extends CrudRepository<User, Long> {
 	User findByUsername(String username);
 	User findByEmail(String email);
+	User findByPhone(String phone);
 }

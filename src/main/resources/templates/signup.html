@@ -12,6 +12,12 @@
             	</div>
         	</div>
         </div>
+        <div th:if="${hasErrors}" class="alert alert-danger">
+        	
+        	<ul>
+        		<li th:each="errorMessage : ${errorMessages}"><span th:text="${errorMessage}"></span></li>
+        	</ul>
+        </div>
         <div class="main-login main-center">
             <form class="form-horizontal" method="post" th:action="@{/signup}">
 
