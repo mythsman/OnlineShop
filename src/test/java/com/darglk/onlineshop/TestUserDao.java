@@ -1,9 +1,6 @@
 package com.darglk.onlineshop;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
-
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import org.junit.Before;
@@ -16,8 +13,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.darglk.onlineshop.dao.RoleDao;
 import com.darglk.onlineshop.dao.UserDao;
 import com.darglk.onlineshop.model.User;
+import com.darglk.onlineshop.security.Role;
+import com.darglk.onlineshop.security.UserRole;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -29,6 +29,9 @@ public class TestUserDao {
 	
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private RoleDao roleDao;
 	
 	private User user;
 	private User secondUser;
@@ -76,8 +79,52 @@ public class TestUserDao {
 	}
 	
 	@Test(expected=Exception.class)
-	public void testUserWithTheSameNameFails() {
+	public void testSaveUserWithTheSameNameFails() {
 		entityManager.persist(user);
 		entityManager.persist(secondUser);
+	}
+	
+	@Test(expected=Exception.class)
+	public void testSaveUserWithTheSameEmailFails() {
+		secondUser.setUsername("jondoe");
+		secondUser.setEmail("john@test.com");
+		entityManager.persist(user);
+		entityManager.persist(secondUser);
+	}
+	
+	@Test(expected=Exception.class)
+	public void testSaveUserWithTheSamePhoneFails() {
+		secondUser.setPhone("700700799");
+		secondUser.setUsername("jondoe");
+		entityManager.persist(user);
+		entityManager.persist(secondUser);
+	}
+	
+	@Test(expected=ConstraintViolationException.class)
+	public void testSaveUserWithInvalidPostCodeFails() {
+		user.setPostcode("30-abc");
+		entityManager.persist(user);
+	}
+	
+	@Test(expected=ConstraintViolationException.class)
+	public void testSaveUserWithInvalidPasswordFails() {
+		user.setPassword("adsfcv2");
+		entityManager.persist(user);
+	}
+	
+	@Test
+	public void testUserRolesAndAuthorities() {
+		Role role = new Role();
+		role.setName("USER_ROLE");
+		UserRole userRole = new UserRole(user, role);
+		role.getUserRoles().add(userRole);
+		user.getUserRoles().add(userRole);
+		entityManager.persist(role);
+		entityManager.persist(userRole);
+		entityManager.persist(user);
+		User found = userDao.findByEmail(user.getEmail());
+		Role roleFound = roleDao.findByName(role.getName());
+		assertThat(found.getUserRoles().contains(userRole));
+		assertThat(roleFound.getName().equals(role.getName()));
 	}
 }
