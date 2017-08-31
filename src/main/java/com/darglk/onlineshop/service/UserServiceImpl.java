@@ -65,14 +65,6 @@ public class UserServiceImpl implements UserService {
 
         return localUser;
     }
-    
-    public boolean checkUserExists(String username, String email){
-        if (checkUsernameExists(username) || checkEmailExists(username)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     public boolean checkUsernameExists(String username) {
         if (null != findByUsername(username)) {
@@ -120,7 +112,7 @@ public class UserServiceImpl implements UserService {
 		return false;
 	}
 
-	public Object findByPhone(String phone) {
+	public User findByPhone(String phone) {
 		return userDao.findByPhone(phone);
 	}
 
