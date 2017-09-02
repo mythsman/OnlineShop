@@ -107,6 +107,14 @@ public class HomeController {
 		return "updatePassword";
 	}
 	
+	@RequestMapping(value="/user/update")
+	public String updateUser(Model model) {
+		User user = (User)SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+		model.addAttribute("user", user);
+		return "signup";
+	}
+	
 	@RequestMapping(value = "/user/resetPassword", 
             method = RequestMethod.POST)
 	public String resetPassword(HttpServletRequest request, @RequestParam("email") String userEmail) {
@@ -125,10 +133,14 @@ public class HomeController {
 	public String signupPost(@Valid @ModelAttribute("user") User user, BindingResult bindingResult , Model model) {
 		
 		List<String> errorMessages = new ArrayList<>();
+		User signedIn = (User)SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+		if(signedIn == null) {
+			validateUniqueValuesForNewUser(user, errorMessages);
+		} else {
+			validateUniqueValuesForExistingUser(user, errorMessages, signedIn);
+		}
 		
-		checkExistenceOfEmail(user, errorMessages);
-		checkExistenceOfUsername(user, errorMessages);
-		checkExistenceOfPhoneNumber(user, errorMessages);
 		checkEqualityOfPasswords(user, errorMessages);
 		checkOtherValidationErrors(bindingResult, errorMessages);
 		
@@ -136,12 +148,34 @@ public class HomeController {
 			model.addAttribute("hasErrors", true);
 			model.addAttribute("errorMessages", errorMessages);
 			return "signup";
-		} else {
+		} 
+		
+		if(signedIn == null) {
 			Set<UserRole> userRoles = new HashSet<>();
 			userRoles.add(new UserRole(user, roleDao.findByName("ROLE_USER")));
 			userService.createUser(user, userRoles);
-			return "redirect:/";
+			
+		} else {
+			userService.updateUserPassword(user);
+			userService.save(user);
+			signedIn.setUsername(user.getUsername());
 		}
+		return "redirect:/";
+	}
+
+	private void validateUniqueValuesForExistingUser(User user, List<String> errorMessages, User signedIn) {
+		if(!user.getUsername().equals(signedIn.getUsername()))
+			checkExistenceOfUsername(user, errorMessages);
+		if(!user.getEmail().equals(signedIn.getEmail()))
+			checkExistenceOfEmail(user, errorMessages);
+		if(!user.getPhone().equals(signedIn.getPhone()))
+			checkExistenceOfPhoneNumber(user, errorMessages);
+	}
+
+	private void validateUniqueValuesForNewUser(User user, List<String> errorMessages) {
+		checkExistenceOfEmail(user, errorMessages);
+		checkExistenceOfUsername(user, errorMessages);
+		checkExistenceOfPhoneNumber(user, errorMessages);
 	}
 
 	private void checkOtherValidationErrors(BindingResult bindingResult, List<String> errorMessages) {
