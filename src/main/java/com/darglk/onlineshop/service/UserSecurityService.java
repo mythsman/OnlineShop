@@ -55,6 +55,7 @@ public class UserSecurityService implements UserDetailsService {
         if ((passToken.getExpiryDate()
             .getTime() - cal.getTime()
             .getTime()) <= 0) {
+        	passwordResetTokenDao.delete(passToken);
             return "expired";
         }
      
@@ -63,6 +64,7 @@ public class UserSecurityService implements UserDetailsService {
           user, null, Arrays.asList(
           new SimpleGrantedAuthority("CHANGE_PASSWORD_PRIVILEGE")));
         SecurityContextHolder.getContext().setAuthentication(auth);
+        passwordResetTokenDao.delete(passToken);
         return null;
     }
 }

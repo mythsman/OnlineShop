@@ -8,5 +8,4 @@ import com.darglk.onlineshop.security.PasswordResetToken;
 public interface PasswordTokenDao extends CrudRepository<PasswordResetToken, Integer>{
 
 	PasswordResetToken findByToken(String token);
-
 }

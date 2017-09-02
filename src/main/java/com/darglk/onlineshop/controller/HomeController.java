@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -42,7 +43,7 @@ public class HomeController {
 	private JavaMailSender mailSender;
     
     @Autowired
-    UserDetailsService securityService;
+    private UserDetailsService securityService;
     
 	@RequestMapping("/")
 	public String index() {
@@ -67,6 +68,23 @@ public class HomeController {
 		
 		return "signup";
 	}	
+	
+	@RequestMapping(value = "/user/remove")
+	public String invalidateAccount(HttpServletRequest request, Model model) {
+		
+		User signedIn = (User)SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+		try {
+			request.logout();
+		} catch(ServletException e) {
+			model.addAttribute("deleteAccountError", "Couldn't finalize request. Try again later");
+			return "redirect:/";
+		}
+
+		userService.disableUser(signedIn.getUsername());
+		model.addAttribute("deleteAccountInfo", "Your account has been removed.");
+		return "redirect:/";
+	}
 	
 	@RequestMapping(value = "/user/savePassword", method = RequestMethod.POST)
 	public String savePassword(Locale locale, @RequestParam("newPassword") String newPassword,
