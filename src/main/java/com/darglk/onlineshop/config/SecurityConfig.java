@@ -41,9 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(
             		"/error/**/*","/webjars/**","/css/**","/images/**","/js/**","/console/**","/forgotPassword",
             		"/","/login*","/login*", "/logout*", "/signin/**", "/signup/**", "/customLogin",
-                    "/user/registration*", "/registrationConfirm*", "/expiredAccount*", "/registration*",
-                    "/badUser*", "/user/resendRegistrationToken*" ,"/forgetPassword*", "/user/resetPassword*",
-                    "/user/changePassword*", "/emailError*", "/resources/**","/old/user/registration*","/successRegister*","/qrcode*").permitAll()
+                    "/user/resetPassword*",
+                    "/user/changePassword*", "/resources/**").permitAll()
             .antMatchers("/invalidSession*").anonymous()
             .antMatchers("/user/update", "/user/remove").hasRole("USER")
             .antMatchers("/user/updatePassword*","/user/savePassword*","/updatePassword*").hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
@@ -53,7 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .loginPage("/signin")
         .defaultSuccessUrl("/")
         .failureUrl("/signin?error=true").and()
-        .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/index?logout").deleteCookies("remember-me").permitAll();
+        .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+        .logoutSuccessUrl("/index?logout").deleteCookies("remember-me").permitAll();
     }
 
     @Autowired

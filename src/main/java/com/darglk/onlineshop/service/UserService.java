@@ -33,4 +33,6 @@ public interface UserService {
 	void createPasswordResetTokenForUser(User user, String token);
 	
 	public void updateUserPassword(User user);
+
+	void checkEqualityOfPasswords(User user, List<String> errorMessages);
 }

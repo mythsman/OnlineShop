@@ -131,4 +131,15 @@ public class UserServiceImpl implements UserService {
 	    PasswordResetToken myToken = new PasswordResetToken(token, user);
 	    passwordTokenDao.save(myToken);
 	}
+
+	@Override
+	public void checkEqualityOfPasswords(User user, List<String> errorMessages) {
+		if(!checkPasswordsAreEqual(user.getPassword(), user.getPasswordConfirmation())) {
+			errorMessages.add("Passwords are not equal.");
+		}
+	}
+
+	private boolean checkPasswordsAreEqual(String password, String passwordConfirmation) {
+		return password.equals(passwordConfirmation);
+	}
 }
