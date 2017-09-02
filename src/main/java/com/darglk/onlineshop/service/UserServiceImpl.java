@@ -8,9 +8,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.darglk.onlineshop.dao.PasswordTokenDao;
 import com.darglk.onlineshop.dao.RoleDao;
 import com.darglk.onlineshop.dao.UserDao;
 import com.darglk.onlineshop.model.User;
+import com.darglk.onlineshop.security.PasswordResetToken;
 import com.darglk.onlineshop.security.UserRole;
 
 import org.slf4j.Logger;
@@ -31,12 +33,21 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+	private PasswordTokenDao passwordTokenDao;
 	
     
 	public void save(User user) {
         userDao.save(user);
     }
 
+	public void updateUserPassword(User user) {
+		String encryptedPassword = passwordEncoder.encode(user.getPassword());
+		user.setPassword(encryptedPassword);
+		userDao.save(user);
+	}
+	
     public User findByUsername(String username) {
         return userDao.findByUsername(username);
     }
@@ -115,5 +126,9 @@ public class UserServiceImpl implements UserService {
 	public User findByPhone(String phone) {
 		return userDao.findByPhone(phone);
 	}
-
+	
+	public void createPasswordResetTokenForUser(User user, String token) {
+	    PasswordResetToken myToken = new PasswordResetToken(token, user);
+	    passwordTokenDao.save(myToken);
+	}
 }

@@ -13,7 +13,7 @@
                 <div class="bg-danger" th:if="${param.logout}">
                     You have been logged out.
                 </div>
-                <form class="form-signin" th:action="@{/index}" method="post">
+                <form class="form-signin" th:action="@{/signin}" method="post">
                     <h2 class="form-signin-heading">Please sign in</h2>
                     <div class="form-group">
                         <label for="username" class="sr-only">Username</label>
@@ -37,6 +37,7 @@
                 
                 <div class="form-group ">
                     <a type="submit" class="btn btn-info btn-lg btn-block login-button" th:href="@{/signup}">Sign up!</a>
+                    <a th:href="@{/forgotPassword}">Forgot password</a>
                 </div>
             </div>
         </div>

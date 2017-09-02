@@ -29,4 +29,8 @@ public interface UserService {
     void disableUser (String username);
 
 	boolean checkPhoneNumberExists(String phone);
+
+	void createPasswordResetTokenForUser(User user, String token);
+	
+	public void updateUserPassword(User user);
 }

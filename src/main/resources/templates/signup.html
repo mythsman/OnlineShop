@@ -12,8 +12,7 @@
             	</div>
         	</div>
         </div>
-        <div th:if="${hasErrors}" class="alert alert-danger">
-        	
+        <div th:if="${hasErrors}" class="alert alert-danger">	
         	<ul>
         		<li th:each="errorMessage : ${errorMessages}"><span th:text="${errorMessage}"></span></li>
         	</ul>
