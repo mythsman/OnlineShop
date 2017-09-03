@@ -54,8 +54,8 @@ public class HomeController {
 	public String signupPost(@Valid @ModelAttribute("user") User user, BindingResult bindingResult , Model model) {
 		
 		List<String> errorMessages = new ArrayList<>();
-		User signedIn = (User)SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
+		User signedIn = userService.findByUsername(SecurityContextHolder.getContext()
+                .getAuthentication().getName());
 		
 		validateUniqueValues(user, errorMessages, signedIn);
 		userService.checkEqualityOfPasswords(user, errorMessages);
