@@ -40,8 +40,8 @@ public class UserController {
 	@RequestMapping(value = "/remove")
 	public String invalidateAccount(HttpServletRequest request, Model model) {
 		
-		User signedIn = (User)SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
+		User signedIn = userService.findByUsername(SecurityContextHolder.getContext()
+                .getAuthentication().getName());
 		try {
 			request.logout();
 		} catch(ServletException e) {
@@ -96,7 +96,8 @@ public class UserController {
 	@RequestMapping(value="/update")
 	public String updateUser(Model model) {
 		
-		User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = userService.findByUsername(SecurityContextHolder.getContext()
+                .getAuthentication().getName());
 		model.addAttribute("user", user);
 		return "signup";
 	}
