@@ -13,6 +13,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,9 +21,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.darglk.onlineshop.dao.PasswordTokenDao;
 import com.darglk.onlineshop.dao.RoleDao;
 import com.darglk.onlineshop.dao.UserDao;
 import com.darglk.onlineshop.model.User;
+import com.darglk.onlineshop.security.PasswordResetToken;
 import com.darglk.onlineshop.security.Role;
 import com.darglk.onlineshop.security.UserRole;
 import com.darglk.onlineshop.service.UserService;
@@ -51,6 +54,9 @@ public class TestUserService {
 	
 	@MockBean
 	private BCryptPasswordEncoder passwordEncoder;
+	
+	@MockBean
+	private PasswordTokenDao passwordTokenDao;
 	
 	private User user;
 	
@@ -195,5 +201,26 @@ public class TestUserService {
 		when(userDao.findByPhone("000")).thenReturn(null);
 		assertFalse(userService.checkPhoneNumberExists("000"));
 		verify(userDao, times(1)).findByPhone("000");
+	}
+	
+	@Test
+	public void testCreatePasswordResetTokenForUser() {
+		userService.createPasswordResetTokenForUser(user, "token");
+		verify(passwordTokenDao, times(1)).save(Mockito.any(PasswordResetToken.class));
+	}
+	
+	@Test
+	public void testCheckEqualityOfPasswordsWithUnequalPasswords() {
+		List<String> errorMsg = new ArrayList<>();
+		user.setPasswordConfirmation("adskfjl");
+		userService.checkEqualityOfPasswords(user, errorMsg);
+		assertThat(errorMsg.size(), is(1));
+	}
+	
+	@Test
+	public void testCheckEqualityOfPasswordsWithEqualPasswords() {
+		List<String> errorMsg = new ArrayList<>();
+		userService.checkEqualityOfPasswords(user, errorMsg);
+		assertThat(errorMsg.size(), is(0));
 	}
 }
