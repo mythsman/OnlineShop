@@ -1,8 +1,13 @@
 package com.darglk.onlineshop;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,8 +20,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.darglk.onlineshop.dao.PasswordTokenDao;
 import com.darglk.onlineshop.dao.UserDao;
 import com.darglk.onlineshop.model.User;
+import com.darglk.onlineshop.security.PasswordResetToken;
 import com.darglk.onlineshop.service.UserSecurityService;
 
 
@@ -39,11 +46,17 @@ public class TestUserSecurityService {
 	@MockBean
 	private UserDao userDao;
 	
+	@MockBean
+	private PasswordTokenDao passwordResetTokenDao;
+	
 	private User user;
+	
+	private PasswordResetToken passwordResetToken;
 	
 	@Before
 	public void setupUserData() {
 		user = new User();
+		user.setUserId(12L);
 		user.setAddress("Somewhere 12");
 		user.setCity("Somecity");
 		user.setEmail("john@test.com");
@@ -55,6 +68,7 @@ public class TestUserSecurityService {
 		user.setPhone("700700799");
 		user.setPostcode("90-691");
 		user.setUsername("johndoe");	
+		passwordResetToken = new PasswordResetToken("3a61c1be-4550-4ac2-9492-e91adbfba40d", user);
 	}
 	
 	@Test
@@ -69,5 +83,41 @@ public class TestUserSecurityService {
 		when(userDao.findByUsername(user.getUsername())).thenReturn(null);
 		userDetailsService.loadUserByUsername(user.getUsername());
 		verify(userDao, times(1)).findByUsername(user.getUsername());
+	}
+	
+	@Test
+	public void testValidatePasswordWithNullResetTokenReturnsInvalidTokenMessage() {
+		when(passwordResetTokenDao.findByToken("")).thenReturn(null);
+		UserSecurityService userSecurityService = (UserSecurityService)userDetailsService; 
+		String msg = userSecurityService.validatePasswordResetToken(0, "");
+		assertTrue(msg.equals("invalidToken"));
+	}
+	
+	@Test
+	public void testValidatePasswordWithDifferentIdReturnsInvalidTokenMessage() {
+		when(passwordResetTokenDao.findByToken("token")).thenReturn(passwordResetToken);
+		UserSecurityService userSecurityService = (UserSecurityService)userDetailsService; 
+		String msg = userSecurityService.validatePasswordResetToken(0, "token");
+		assertTrue(msg.equals("invalidToken"));
+	}
+	
+	@Test
+	public void testValidatePasswordWithExpiredToken() {
+		when(passwordResetTokenDao.findByToken("token")).thenReturn(passwordResetToken);
+		UserSecurityService userSecurityService = (UserSecurityService)userDetailsService;
+		passwordResetToken.setExpiryDate(Date.from(Instant.EPOCH));
+		String msg = userSecurityService.validatePasswordResetToken(12L, "token");
+		verify(passwordResetTokenDao, times(1)).delete(passwordResetToken);
+		assertTrue(msg.equals("expired"));
+	}
+	
+	@Test
+	public void testValidatePasswordWithCorrectToken() {
+		when(passwordResetTokenDao.findByToken("token")).thenReturn(passwordResetToken);
+		UserSecurityService userSecurityService = (UserSecurityService)userDetailsService;
+		passwordResetToken.setExpiryDate(Date.from(Instant.now().plus(Duration.ofDays(2))));
+		String msg = userSecurityService.validatePasswordResetToken(12L, "token");
+		verify(passwordResetTokenDao, times(1)).delete(passwordResetToken);
+		assertTrue(msg == null);
 	}
 }
