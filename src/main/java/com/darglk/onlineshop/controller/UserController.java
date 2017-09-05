@@ -18,7 +18,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.darglk.onlineshop.helpers.FlashMessage;
 import com.darglk.onlineshop.model.User;
 import com.darglk.onlineshop.service.UserSecurityService;
 import com.darglk.onlineshop.service.UserService;
@@ -38,25 +40,26 @@ public class UserController {
     private UserService userService;
     
 	@RequestMapping(value = "/remove")
-	public String invalidateAccount(HttpServletRequest request, Model model) {
+	public String invalidateAccount(HttpServletRequest request, RedirectAttributes redirectAttributes) {
 		
 		User signedIn = userService.findByUsername(SecurityContextHolder.getContext()
                 .getAuthentication().getName());
 		try {
 			request.logout();
 		} catch(ServletException e) {
-			model.addAttribute("deleteAccountError", "Couldn't finalize request. Try again later");
+			FlashMessage.createFlashMessage("alert-danger", "Couldn't finalize request. Try again later", redirectAttributes);
 			return "redirect:/";
 		}
 
 		userService.disableUser(signedIn.getUsername());
-		model.addAttribute("deleteAccountInfo", "Your account has been removed.");
+		FlashMessage.createFlashMessage("alert-warning", "Your account has been removed.", redirectAttributes);
 		return "redirect:/";
 	}
 	
 	@RequestMapping(value = "/savePassword", method = RequestMethod.POST)
 	public String savePassword(Locale locale, @RequestParam("newPassword") String newPassword,
-			@RequestParam("newPasswordConfirmation") String newPasswordConfirmation, Model model) {
+			@RequestParam("newPasswordConfirmation") String newPasswordConfirmation, Model model, 
+			RedirectAttributes redirectAttributes) {
 		
 	    User user = 
 	      userService.findByUsername((String)SecurityContextHolder.getContext()
@@ -71,18 +74,19 @@ public class UserController {
 	    	model.addAttribute("errorMessages", errorMessages);
 	    	return "updatePassword";
 	    }
+	    FlashMessage.createFlashMessage("alert-success", "Your password has been updated.", redirectAttributes);
 	    userService.updateUserPassword(user);
 	    return "redirect:/";
 	}	
 
 	@RequestMapping(value = "/changePassword", method = RequestMethod.GET)
-	public String showChangePasswordPage(Locale locale, Model model, 
+	public String showChangePasswordPage(Locale locale, RedirectAttributes redirectAttributes, 
 			@RequestParam("id") long id, @RequestParam("token") String token) {
 		
 	    String result = ((UserSecurityService) securityService).validatePasswordResetToken(id, token);
 	    if (result != null) {
-	        model.addAttribute("message", 
-	          "Password has not been reset.");
+	    	FlashMessage.createFlashMessage("alert-danger", "Cannot reset your password. Try again later or"
+	    			+ " resend reset token on your email address.", redirectAttributes);
 	        return "redirect:/login?lang=" + locale.getLanguage();
 	    }
 	    return "redirect:/user/updatePassword";
@@ -103,7 +107,8 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
-	public String resetPassword(HttpServletRequest request, @RequestParam("email") String userEmail) {
+	public String resetPassword(HttpServletRequest request, @RequestParam("email") String userEmail,
+			RedirectAttributes redirectAttributes) {
 		
 		User user = userService.findByEmail(userEmail);
 		if (user == null) {
@@ -113,6 +118,8 @@ public class UserController {
 		userService.createPasswordResetTokenForUser(user, token);
 		mailSender.send(constructResetTokenEmail(request.getRequestURI(), 
 				request.getLocale(), token, user));
+		FlashMessage.createFlashMessage("alert-success", "Your password has been changed. Check your email inbox"
+				+ " for further instructions", redirectAttributes);
 		return "redirect:/signin";
 	}
 	

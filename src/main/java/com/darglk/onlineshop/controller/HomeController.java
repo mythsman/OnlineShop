@@ -14,7 +14,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.darglk.onlineshop.dao.RoleDao;
+import com.darglk.onlineshop.helpers.FlashMessage;
 import com.darglk.onlineshop.model.User;
 import com.darglk.onlineshop.security.UserRole;
 import com.darglk.onlineshop.service.UserService;
@@ -29,12 +32,12 @@ public class HomeController {
     private UserService userService;
 
 	@RequestMapping("/")
-	public String index() {
+	public String index(Model model) {
 		return "home";
 	}
 	
 	@RequestMapping(value="/forgotPassword", method = RequestMethod.GET)
-	public String forgotPassword() {
+	public String forgotPassword() {		
 		return "forgotpassword";
 	}
 	
@@ -44,14 +47,15 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value="/signup", method = RequestMethod.GET)
-	public String signup(Model model) {
+	public String signup(Model model) {		
 		User user = new User();
 		model.addAttribute("user", user);
 		return "signup";
 	}	
 	
 	@RequestMapping(value="/signup", method = RequestMethod.POST)
-	public String signupPost(@Valid @ModelAttribute("user") User user, BindingResult bindingResult , Model model) {
+	public String signupPost(@Valid @ModelAttribute("user") User user, BindingResult bindingResult ,
+			Model model, RedirectAttributes redirectAttributes) {
 		
 		List<String> errorMessages = new ArrayList<>();
 		User signedIn = userService.findByUsername(SecurityContextHolder.getContext()
@@ -71,6 +75,7 @@ public class HomeController {
 		} else {
 			updateExistingUser(user, signedIn);
 		}
+		FlashMessage.createFlashMessage("alert-success", "Signed up successfully", redirectAttributes);
 		return "redirect:/";
 	}
 

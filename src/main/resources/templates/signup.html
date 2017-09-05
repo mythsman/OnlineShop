@@ -7,6 +7,8 @@
     	<div class="row main">
     		<div class="col-sm-4"></div>
     		<div class="col-sm-4">
+    		<div th:if="${flash}" class="alert " th:classappend="${type}" th:text="${flashMessage}">
+    		</div>
         	<div class="panel-heading">
             	<div class="panel-title text-center">
                 	<h1 class="title">Sign Up</h1>
