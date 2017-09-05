@@ -8,6 +8,7 @@
         <div class="row ">
         	<div class="col-sm-4"></div>
         		<div class="col-sm-4">
+        		<div th:if="${flash}" class="alert " th:classappend="${type}" th:text="${flashMessage}"></div>
 		            <div class="main-center ">
 		                <div class="alert alert-danger" th:if="${param.error}">
 		                    Invalid username and secret.
