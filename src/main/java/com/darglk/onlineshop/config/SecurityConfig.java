@@ -53,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .defaultSuccessUrl("/")
         .failureUrl("/signin?error=true").and()
         .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-        .logoutSuccessUrl("/home?logout").deleteCookies("remember-me").permitAll();
+        .logoutSuccessUrl("/signin").deleteCookies("remember-me").permitAll();
     }
 
     @Autowired
