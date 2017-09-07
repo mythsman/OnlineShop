@@ -37,25 +37,29 @@ public class UserServiceImpl implements UserService {
     @Autowired
 	private PasswordTokenDao passwordTokenDao;
 	
-    
+    @Transactional
 	public void save(User user) {
         userDao.save(user);
     }
 
+    @Transactional
 	public void updateUserPassword(User user) {
 		String encryptedPassword = passwordEncoder.encode(user.getPassword());
 		user.setPassword(encryptedPassword);
 		userDao.save(user);
 	}
 	
+    @Transactional
     public User findByUsername(String username) {
         return userDao.findByUsername(username);
     }
 
+    @Transactional
     public User findByEmail(String email) {
         return userDao.findByEmail(email);
     }
         
+    @Transactional
     public User createUser(User user, Set<UserRole> userRoles) {
         User localUser = userDao.findByUsername(user.getUsername());
 
@@ -77,6 +81,7 @@ public class UserServiceImpl implements UserService {
         return localUser;
     }
 
+    @Transactional
     public boolean checkUsernameExists(String username) {
         if (null != findByUsername(username)) {
             return true;
@@ -85,6 +90,7 @@ public class UserServiceImpl implements UserService {
         return false;
     }
     
+    @Transactional
     public boolean checkEmailExists(String email) {
         if (null != findByEmail(email)) {
             return true;
@@ -93,6 +99,7 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
+    @Transactional
     public User saveUser (User user) {
         return userDao.save(user);
     }
@@ -101,12 +108,14 @@ public class UserServiceImpl implements UserService {
         return (List<User>) userDao.findAll();
     }
 
+    @Transactional
     public void enableUser (String username) {
         User user = findByUsername(username);
         user.setEnabled(true);
         userDao.save(user);
     }
 
+    @Transactional
     public void disableUser (String username) {
         User user = findByUsername(username);
         user.setEnabled(false);
@@ -116,6 +125,7 @@ public class UserServiceImpl implements UserService {
     }
 
 	@Override
+	@Transactional
 	public boolean checkPhoneNumberExists(String phone) {
 		if (null != findByPhone(phone)) {
 			return true;
@@ -123,16 +133,18 @@ public class UserServiceImpl implements UserService {
 		return false;
 	}
 
+	@Transactional
 	public User findByPhone(String phone) {
 		return userDao.findByPhone(phone);
 	}
 	
+	@Transactional
 	public void createPasswordResetTokenForUser(User user, String token) {
 	    PasswordResetToken myToken = new PasswordResetToken(token, user);
 	    passwordTokenDao.save(myToken);
 	}
 
-	@Override
+	@Override	
 	public void checkEqualityOfPasswords(User user, List<String> errorMessages) {
 		if(!checkPasswordsAreEqual(user.getPassword(), user.getPasswordConfirmation())) {
 			errorMessages.add("Passwords are not equal.");

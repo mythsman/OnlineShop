@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.darglk.onlineshop.dao.PasswordTokenDao;
 import com.darglk.onlineshop.dao.UserDao;
@@ -34,6 +35,7 @@ public class UserSecurityService implements UserDetailsService {
 	private PasswordTokenDao passwordResetTokenDao;
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userDao.findByUsername(username);
         if (null == user) {
@@ -43,6 +45,7 @@ public class UserSecurityService implements UserDetailsService {
         return user;
     }
     
+    @Transactional
     public String validatePasswordResetToken(long id, String token) {
         PasswordResetToken passToken = 
           passwordResetTokenDao.findByToken(token);
