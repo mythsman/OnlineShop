@@ -3,6 +3,7 @@ package com.darglk.onlineshop.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,7 +27,7 @@ public class Category {
 	@Column(name="description", nullable=false)
 	private String description;
 	
-	@OneToMany(fetch=FetchType.LAZY, mappedBy="category")	
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="category", cascade=CascadeType.ALL)	
 	private List<Product> products;
 	
 	public Category() {

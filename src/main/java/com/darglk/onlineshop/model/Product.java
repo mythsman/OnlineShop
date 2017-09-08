@@ -2,6 +2,7 @@ package com.darglk.onlineshop.model;
 
 import java.math.BigDecimal;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -39,7 +40,7 @@ public class Product {
 	@Digits(integer = 10, fraction = 2)
 	private BigDecimal price;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinColumn(name="category_id")
 	private Category category;
 	
