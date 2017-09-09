@@ -76,7 +76,7 @@
             </div>            
           </div>
           <!-- /.row -->
-			
+			<div th:if="${showPagination}">
             	<span th:if="${page gt 0}" class="previous">
             		<a th:if="${category != null}" th:href="@{/product/list/{id}(id=${category.id}, page=${page - 1})}"
             		class="btn btn-warning btn-sm float-left" th:text="Previous"></a>
@@ -95,8 +95,7 @@
             		<a th:if="${category == null and !#strings.isEmpty(searchTerm)}" th:href="@{/product/list(page=${page + 1}, searchTerm=${searchTerm})}"
             		class="btn btn-warning btn-sm float-right" th:text="Next"></a>
             	</span>
-            	
-            
+            </div>
         </div>
         <!-- /.col-lg-9 -->
 

@@ -41,9 +41,11 @@ public class ProductController {
 		Page<Product> products = productService.getProductsByTerm(searchTerm, pageable);
 		loadCategories(model);
 		
+		model.addAttribute("showPagination", true);
 		model.addAttribute("products", products);
 		model.addAttribute("page", page);
 		model.addAttribute("searchTerm", searchTerm);
+		
 		return "home";
 	}
 	
@@ -54,6 +56,7 @@ public class ProductController {
 		Page<Product> products = productService.getProductsByCategoryId(id, pageable);
 		
 		loadCategories(model);
+		model.addAttribute("showPagination", true);
 		model.addAttribute("products", products);
 		model.addAttribute("page", page);
 		return "home";
