@@ -25,7 +25,7 @@ import com.darglk.onlineshop.security.UserRole;
 public class TestUserDao {
 
 	@Autowired
-	TestEntityManager entityManager;
+	private TestEntityManager entityManager;
 	
 	@Autowired
 	private UserDao userDao;
