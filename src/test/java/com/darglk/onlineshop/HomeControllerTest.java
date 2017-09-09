@@ -12,10 +12,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -28,6 +31,17 @@ import com.darglk.onlineshop.service.UserService;
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers = {HomeController.class}, secure = false)
 public class HomeControllerTest {
+	
+	@TestConfiguration
+	static class TestUserServiceContextConfiguration {
+		@Bean
+		public DefaultWebSecurityExpressionHandler expressionHandler() {
+			return new DefaultWebSecurityExpressionHandler();
+		}
+	}
+	
+	@Autowired
+	private DefaultWebSecurityExpressionHandler handler;
 	
 	@Autowired
 	private MockMvc mvc;
@@ -54,6 +68,7 @@ public class HomeControllerTest {
 		user.setPhone("700700799");
 		user.setPostcode("90-691");
 		user.setUsername("johndoe");
+		System.out.println("USING DEFAULT WEB SECURITY EXPRESSION HANDLER: " +  handler.toString());
 	}
 	
 	@Test
