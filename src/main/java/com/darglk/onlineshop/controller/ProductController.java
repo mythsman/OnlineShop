@@ -48,15 +48,15 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value = "/list/category/{id}", method = RequestMethod.GET)
-	public String loadProductsByCategory(@PathVariable("id") Long id, Model model, 
+	public String loadProductsByCategory(@PathVariable("id") Integer id, Model model, 
 			@RequestParam(name="page", defaultValue="0", required=false) Integer page) {
 		Pageable pageable = new PageRequest(page, 6);
-		Page<Product> products = productService.getProductsByCategoryId(page, pageable);
+		Page<Product> products = productService.getProductsByCategoryId(id, pageable);
 		
 		loadCategories(model);
 		model.addAttribute("products", products);
 		model.addAttribute("page", page);
-		return "list-products";
+		return "home";
 	}
 	
 	private void loadCategories(Model model) {
