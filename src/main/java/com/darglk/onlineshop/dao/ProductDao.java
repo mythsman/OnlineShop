@@ -9,11 +9,11 @@ import com.darglk.onlineshop.model.Product;
 
 public interface ProductDao extends JpaRepository<Product, Long> {
 
-	@Query(value="SELECT * FROM PRODUCT WHERE category_id = ?1 ORDER BY ?#{pageable}", 
-			countQuery="SELECT COUNT(*) FROM PRODUCT WHERE category_id = ?1", nativeQuery=true)
+	@Query(value="from Product p WHERE p.category.id = ?1", 
+			countQuery="SELECT COUNT(p) FROM Product p WHERE p.category.id = ?1", nativeQuery=false)
 	Page<Product> findByCategoryId(Long categoryId, Pageable pageable);
 	
-	@Query(value="SELECT * FROM PRODUCT WHERE description LIKE %?1% OR name LIKE %?1% ORDER BY ?#{pageable}",
-			countQuery="SELECT COUNT(*) FROM PRODUCT WHERE description LIKE %?1% OR name LIKE %?1%", nativeQuery=true)
+	@Query(value="from Product p WHERE p.description LIKE %?1% OR p.name LIKE %?1%",
+			countQuery="SELECT COUNT(p) FROM Product p WHERE p.description LIKE %?1% OR p.name LIKE %?1%", nativeQuery=false)
 	Page<Product> findByTerm(String searchTerm, Pageable pageable);
 }

@@ -44,7 +44,7 @@ public class ProductController {
 		model.addAttribute("products", products);
 		model.addAttribute("page", page);
 		model.addAttribute("searchTerm", searchTerm);
-		return "list-products";
+		return "home";
 	}
 	
 	@RequestMapping(value = "/list/category/{id}", method = RequestMethod.GET)

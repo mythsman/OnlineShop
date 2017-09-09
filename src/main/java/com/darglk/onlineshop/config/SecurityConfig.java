@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             		"/error/**/*","/webjars/**","/css/**","/images/**","/js/**","/console/**","/forgotPassword",
             		"/","/login*","/login*", "/logout*", "/signin/**", "/signup/**", "/customLogin",
                     "/user/resetPassword*",
-                    "/user/changePassword*", "/resources/**").permitAll()
+                    "/user/changePassword*", "/resources/**", "/product/**").permitAll()
             .antMatchers("/invalidSession*").anonymous()
             .antMatchers("/user/update", "/user/remove").hasRole("USER")
             .antMatchers("/user/updatePassword*","/user/savePassword*","/updatePassword*").hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
@@ -53,7 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .defaultSuccessUrl("/")
         .failureUrl("/signin?error=true").and()
         .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-        .logoutSuccessUrl("/signin").deleteCookies("remember-me").permitAll();
+        .logoutSuccessUrl("/signin").deleteCookies("remember-me")
+        .permitAll();
     }
 
     @Autowired
