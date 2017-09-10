@@ -62,6 +62,11 @@ public class ProductController {
 		return "home";
 	}
 	
+	@RequestMapping(value = "/add_to_cart/{id}", method = RequestMethod.GET)
+	public String addToCart(@PathVariable("id") Long id, Model model) {
+		return "shoppingCart";
+	}
+	
 	private void loadCategories(Model model) {
 		model.addAttribute("categories", categoryService.getCategories());
 	}

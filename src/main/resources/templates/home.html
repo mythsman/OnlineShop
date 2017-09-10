@@ -68,7 +68,7 @@
                 </div>
                 <div class="card-footer">
                   <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-                  <a href="#" class="btn btn-warning btn-sm float-right"> Add to Cart
+                  <a th:href="@{/product/add_to_cart/{id}(id=${product.id})}" class="btn btn-warning btn-sm float-right"> Add to Cart
                   	<i class="fa fa-shopping-cart" aria-hidden="true"></i>
                   </a>
                 </div>

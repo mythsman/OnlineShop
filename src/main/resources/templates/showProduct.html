@@ -34,7 +34,7 @@
               			<span class="text-warning">★ ★ ★ ★ ☆</span>
               				4.0 stars
             			</div>
-            			<a href="#" class="btn btn-warning btn-lg float-right"> Add to Cart
+            			<a th:href="@{/product/add_to_cart/{id}(id=${product.id})}" class="btn btn-warning btn-lg float-right"> Add to Cart
                   			<i class="fa fa-shopping-cart" aria-hidden="true"></i>
                   		</a>
           			</div>
