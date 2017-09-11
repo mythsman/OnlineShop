@@ -34,9 +34,13 @@
               			<span class="text-warning">★ ★ ★ ★ ☆</span>
               				4.0 stars
             			</div>
-            			<a th:href="@{/product/add_to_cart/{id}(id=${product.id})}" class="btn btn-warning btn-lg float-right"> Add to Cart
-                  			<i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                  		</a>
+            			<form th:action="@{/product/add_to_cart}" method="post">
+                  			<input type="hidden" th:value="${product.id}" name="product_id" />
+                  			<button type="submit" class="btn btn-warning btn-sm float-right"> 
+                  				Add to Cart
+                  				<i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                  			</button>
+                  		</form>
           			</div>
         	</div>
         	<!-- /.row -->	

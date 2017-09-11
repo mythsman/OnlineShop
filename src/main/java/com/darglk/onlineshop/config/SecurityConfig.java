@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     "/user/resetPassword*",
                     "/user/changePassword*", "/resources/**", "/product/**").permitAll()
             .antMatchers("/invalidSession*").anonymous()
-            .antMatchers("/user/update", "/user/remove").hasRole("USER")
+            .antMatchers("/user/update", "/user/remove", "/cart/**", "/product/add_to_cart").hasRole("USER")
             .antMatchers("/user/updatePassword*","/user/savePassword*","/updatePassword*").hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
             .anyRequest().hasAuthority("READ_PRIVILEGE")
             

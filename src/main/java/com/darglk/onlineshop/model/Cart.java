@@ -50,4 +50,9 @@ public class Cart {
 	public void setLineItems(Set<LineItem> lineItems) {
 		this.lineItems = lineItems;
 	}
+
+	@Override
+	public String toString() {
+		return "Cart [id=" + id + ", lineItems=" + lineItems + "]";
+	}
 }

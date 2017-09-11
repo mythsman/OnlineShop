@@ -18,7 +18,7 @@ import javax.validation.constraints.Min;
 @Entity
 @Table(name="line_items")
 @Access(AccessType.FIELD)
-public class LineItem {
+public class LineItem implements Comparable<LineItem> {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -74,5 +74,11 @@ public class LineItem {
 
 	public void setQuantity(Long quantity) {
 		this.quantity = quantity;
+	}
+
+	@Override
+	public int compareTo(LineItem o) {
+		
+		return this.product.getId().compareTo(o.product.getId());
 	}
 }
