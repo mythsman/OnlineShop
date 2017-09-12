@@ -57,4 +57,17 @@ public class CartServiceImpl implements CartService {
 	public Cart findCart(Long cartId) {
 		return cartDao.findOne(cartId);
 	}
+
+	@Override
+	@Transactional
+	public Cart updateProductQuantity(Long cartId, Long[] productIds, Long[] quantities) {
+		
+		int i = 0;
+		for(Long productId : productIds) {
+			LineItem lineItem = lineItemDao.findByProductIdAndCartId(productId, cartId).get();
+			lineItem.setQuantity(quantities[i]);
+			i++;
+		}
+		return findCart(cartId);
+	}
 }

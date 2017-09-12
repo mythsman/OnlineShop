@@ -32,7 +32,8 @@
 		                            </div>
 		                        </div></td>
 		                        <td class="col-sm-1 col-md-1" style="text-align: center">
-		                        <input type="number" min="1" class="form-control" th:attr="name=${lineItem.product.id}, value=${lineItem.quantity}, max=${lineItem.product.quantity}" />
+		                        	<input type="hidden" name="product_ids[]" th:attr="value=${lineItem.product.id}" />
+		                        	<input type="number" min="1" class="form-control" th:attr="name=quantity[], value=${lineItem.quantity}, max=${lineItem.product.quantity}" />
 		                        </td>
 		                        <td class="col-sm-1 col-md-1 text-center"><strong th:text="${lineItem.product.price}"></strong></td>
 		                        <td class="col-sm-1 col-md-1 text-center"><strong th:text="${lineItem.product.price * lineItem.quantity}"></strong></td>
@@ -48,8 +49,8 @@
 		                        <td>   </td>
 		                        <td>   </td>
 		                        <td>   </td>
-		                        <td><h5>Subtotal<br /></h5><h3>Total</h3></td>
-		                        <td class="text-right"><h5><strong>$24.59<br/></strong></h5><h3>$31.53</h3></td>
+		                        <td><h3>Total</h3></td>
+		                        <td class="text-right"><h3 th:text="${totalPrice}"></h3></td>
 		                    </tr>
 		                    <tr>
 		                    	<td>   </td>

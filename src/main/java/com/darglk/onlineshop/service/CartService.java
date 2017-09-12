@@ -9,4 +9,6 @@ public interface CartService {
 	Cart addItemToCart(Long cartId, Long productId);
 
 	Cart findCart(Long cartId);
+
+	Cart updateProductQuantity(Long cartId, Long[] productIds, Long[] quantities);
 }
