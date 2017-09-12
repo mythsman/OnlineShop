@@ -2,7 +2,6 @@ package com.darglk.onlineshop.model;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,7 +27,7 @@ public class LineItem implements Comparable<LineItem> {
 	@JoinColumn(name="product_id")
 	private Product product;
 	
-	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name="cart_id")
 	private Cart cart;
 	

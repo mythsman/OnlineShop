@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,5 +39,15 @@ public class CartController {
 		model.addAttribute("cart", cart);
 		model.addAttribute("totalPrice", cart.totalPrice().doubleValue());
 		return "shoppingCart";
+	}
+	
+	@RequestMapping(value="removeItem/{id}", method=RequestMethod.GET)
+	public String removeItemFromCart(Model model, HttpServletRequest httpRequest, @PathVariable("id") Long id) {
+		Cart cart = cartService.findCart((Long)httpRequest.getSession().getAttribute("cart_id"));
+		if(cart != null) {
+			System.out.println("Removing item from cart " + id + " " + cart);
+			cartService.removeItemFromCart(id);
+		}
+		return "redirect:/cart/show";
 	}
 }

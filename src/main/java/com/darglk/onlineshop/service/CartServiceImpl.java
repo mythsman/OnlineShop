@@ -54,6 +54,7 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
+	@Transactional
 	public Cart findCart(Long cartId) {
 		return cartDao.findOne(cartId);
 	}
@@ -69,5 +70,12 @@ public class CartServiceImpl implements CartService {
 			i++;
 		}
 		return findCart(cartId);
+	}
+
+	@Override
+	@Transactional
+	public void removeItemFromCart(Long id) {
+		LineItem lineItem = lineItemDao.findOne(id);
+		lineItemDao.delete(lineItem);
 	}
 }
