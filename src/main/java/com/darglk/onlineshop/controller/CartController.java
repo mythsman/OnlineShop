@@ -1,5 +1,7 @@
 package com.darglk.onlineshop.controller;
 
+import java.math.RoundingMode;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,7 @@ public class CartController {
 		Cart cart = cartService.findCart((Long)httpRequest.getSession().getAttribute("cart_id"));
 		System.out.println("SHOPPING CART: " + cart);
 		model.addAttribute("cart", cart);
-		model.addAttribute("totalPrice", cart.totalPrice().doubleValue());
+		model.addAttribute("totalPrice", cart.totalPrice().setScale(2, RoundingMode.HALF_UP));
 		return "shoppingCart";
 	}
 	
@@ -37,7 +39,7 @@ public class CartController {
 		Cart cart = cartService.updateProductQuantity(cartId, productIds, quantity);
 		
 		model.addAttribute("cart", cart);
-		model.addAttribute("totalPrice", cart.totalPrice().doubleValue());
+		model.addAttribute("totalPrice", cart.totalPrice().setScale(2, RoundingMode.HALF_UP));
 		return "shoppingCart";
 	}
 	
