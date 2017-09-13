@@ -34,7 +34,7 @@
               			<span class="text-warning">★ ★ ★ ★ ☆</span>
               				4.0 stars
             			</div>
-            			<form th:action="@{/product/add_to_cart}" method="post">
+            			<form th:action="@{/cart/add_to_cart}" method="post">
                   			<input type="hidden" th:value="${product.id}" name="product_id" />
                   			<button type="submit" class="btn btn-warning btn-sm float-right"> 
                   				Add to Cart

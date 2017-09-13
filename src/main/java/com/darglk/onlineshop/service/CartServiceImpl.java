@@ -78,4 +78,22 @@ public class CartServiceImpl implements CartService {
 		LineItem lineItem = lineItemDao.findOne(id);
 		lineItemDao.delete(lineItem);
 	}
+
+	@Override
+	@Transactional
+	public void destroyCart(Long cartId) {
+		cartDao.delete(this.clearCart(cartId));
+	}
+
+	@Override
+	@Transactional
+	public Cart clearCart(Long cartId) {
+		
+		Cart cart = this.findCart(cartId);
+		cart.getLineItems().forEach(lineItem -> {
+			lineItemDao.delete(lineItem);
+		});
+		cart.getLineItems().clear();
+		return cart;
+	}
 }

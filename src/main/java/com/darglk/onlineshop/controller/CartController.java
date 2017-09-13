@@ -50,4 +50,24 @@ public class CartController {
 		}
 		return "redirect:/cart/show";
 	}
+	
+	@RequestMapping(value="clearCart", method=RequestMethod.GET)
+	public String clearCart(Model model, HttpServletRequest httpRequest) {
+		Long cartId = (Long)httpRequest.getSession().getAttribute("cart_id");
+		cartService.clearCart(cartId);
+		return "redirect:/product/list";
+	}
+	
+	@RequestMapping(value = "/add_to_cart", method = RequestMethod.POST)
+	public String addToCart(@RequestParam("product_id") Long id, Model model, HttpServletRequest httpRequest) {
+		Cart cart = null;
+		if(httpRequest.getSession().getAttribute("cart_id") == null) {
+			cart = cartService.createCart();
+			httpRequest.getSession().setAttribute("cart_id", cart.getId());
+		} else {
+			cart = cartService.findCart((Long)httpRequest.getSession().getAttribute("cart_id"));
+		}
+		cart = cartService.addItemToCart(cart.getId(), id);
+		return "redirect:/cart/show";
+	}
 }

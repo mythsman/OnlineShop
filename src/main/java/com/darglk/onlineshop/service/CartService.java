@@ -13,4 +13,8 @@ public interface CartService {
 	Cart updateProductQuantity(Long cartId, Long[] productIds, Long[] quantities);
 
 	void removeItemFromCart(Long id);
+	
+	Cart clearCart(Long cartId);
+	
+	void destroyCart(Long cartId);
 }

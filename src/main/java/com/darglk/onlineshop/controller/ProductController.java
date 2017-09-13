@@ -1,6 +1,5 @@
 package com.darglk.onlineshop.controller;
 
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.darglk.onlineshop.model.Cart;
 import com.darglk.onlineshop.model.Product;
-import com.darglk.onlineshop.service.CartService;
 import com.darglk.onlineshop.service.CategoryService;
 import com.darglk.onlineshop.service.ProductService;
 
@@ -29,9 +26,6 @@ public class ProductController {
 	
 	@Autowired
 	private CategoryService categoryService;
-	
-	@Autowired
-	private CartService cartService;
 	
 	@RequestMapping(value = "/show/{id}", method = RequestMethod.GET)
 	public String getProductById(@PathVariable("id") Long id, Model model) {
@@ -67,20 +61,7 @@ public class ProductController {
 		model.addAttribute("products", products);
 		model.addAttribute("page", page);
 		return "home";
-	}
-	
-	@RequestMapping(value = "/add_to_cart", method = RequestMethod.POST)
-	public String addToCart(@RequestParam("product_id") Long id, Model model, HttpServletRequest httpRequest) {
-		Cart cart = null;
-		if(httpRequest.getSession().getAttribute("cart_id") == null) {
-			cart = cartService.createCart();
-			httpRequest.getSession().setAttribute("cart_id", cart.getId());
-		} else {
-			cart = cartService.findCart((Long)httpRequest.getSession().getAttribute("cart_id"));
-		}
-		cart = cartService.addItemToCart(cart.getId(), id);
-		return "redirect:/cart/show";
-	}
+	}	
 	
 	private void loadCategories(Model model) {
 		model.addAttribute("categories", categoryService.getCategories());
