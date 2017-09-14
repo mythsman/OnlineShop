@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import com.darglk.onlineshop.helpers.CustomLogoutHandler;
 import com.darglk.onlineshop.service.UserSecurityService;
 
 
@@ -25,9 +24,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserSecurityService userSecurityService;
-
-    @Autowired
-    private CustomLogoutHandler logoutHandler;
     
     private static final String SALT = "salt";
 
@@ -56,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .loginPage("/signin")
         .defaultSuccessUrl("/")
         .failureUrl("/signin?error=true").and()
-        .logout().addLogoutHandler(logoutHandler).logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+        .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
         .logoutSuccessUrl("/signin").deleteCookies("remember-me")
         .permitAll();
     }
