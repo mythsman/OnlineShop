@@ -89,7 +89,7 @@ public class CartServiceImpl implements CartService {
 	@Transactional
 	public Cart clearCart(Long cartId) {
 		
-		Cart cart = this.findCart(cartId);
+		Cart cart = cartDao.findOne(cartId);
 		cart.getLineItems().forEach(lineItem -> {
 			lineItemDao.delete(lineItem);
 		});
