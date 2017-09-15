@@ -25,7 +25,6 @@ public class CartController {
 	@RequestMapping(value="show", method=RequestMethod.GET)
 	public String showCart(Model model, HttpServletRequest httpRequest) {
 		Cart cart = cartService.findCart((Long)httpRequest.getSession().getAttribute("cart_id"));
-		System.out.println("SHOPPING CART: " + cart);
 		model.addAttribute("cart", cart);
 		model.addAttribute("totalPrice", cart.totalPrice().setScale(2, RoundingMode.HALF_UP));
 		return "shoppingCart";
@@ -47,7 +46,6 @@ public class CartController {
 	public String removeItemFromCart(Model model, HttpServletRequest httpRequest, @PathVariable("id") Long id) {
 		Cart cart = cartService.findCart((Long)httpRequest.getSession().getAttribute("cart_id"));
 		if(cart != null) {
-			System.out.println("Removing item from cart " + id + " " + cart);
 			cartService.removeItemFromCart(id);
 		}
 		return "redirect:/cart/show";

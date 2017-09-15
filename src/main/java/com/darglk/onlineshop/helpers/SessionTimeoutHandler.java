@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import com.darglk.onlineshop.service.CartService;
 
 @Component
-public class SessionTimeoutHandler extends HttpSessionEventPublisher{
+public class SessionTimeoutHandler extends HttpSessionEventPublisher {
 	
 	@Autowired
 	private CartService cartService;
