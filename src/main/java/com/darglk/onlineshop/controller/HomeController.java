@@ -20,6 +20,7 @@ import com.darglk.onlineshop.dao.RoleDao;
 import com.darglk.onlineshop.helpers.FlashMessage;
 import com.darglk.onlineshop.model.User;
 import com.darglk.onlineshop.security.UserRole;
+import com.darglk.onlineshop.service.CategoryService;
 import com.darglk.onlineshop.service.UserService;
 
 @Controller
@@ -30,10 +31,14 @@ public class HomeController {
 	
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private CategoryService categoryService;
 
 	@RequestMapping("/")
 	public String index(Model model) {
 		model.addAttribute("showJumbo", true);
+		model.addAttribute("categories", categoryService.getCategories());
 		return "home";
 	}
 	

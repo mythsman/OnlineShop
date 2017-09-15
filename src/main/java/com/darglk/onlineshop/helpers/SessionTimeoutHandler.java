@@ -13,11 +13,6 @@ public class SessionTimeoutHandler extends HttpSessionEventPublisher{
 	
 	@Autowired
 	private CartService cartService;
-	
-	@Override
-	public void sessionCreated(HttpSessionEvent event) {
-	    super.sessionCreated(event);
-	}
 
 	@Override
 	public void sessionDestroyed(HttpSessionEvent event) {
