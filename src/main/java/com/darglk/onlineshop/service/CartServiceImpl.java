@@ -32,6 +32,10 @@ public class CartServiceImpl implements CartService {
 	public Cart addItemToCart(Long cartId, Long productId) {
 		Product product = productDao.findOne(productId);
 		Cart cart = cartId == null ? this.createCart() : cartDao.findOne(cartId);
+		if (product.getQuantity() <= 0L) {
+			return cart;
+		}
+		
 		Optional<LineItem> lineItemOptional = lineItemDao.findByProductIdAndCartId(productId, cartId);
 		LineItem lineItem = null;
 		try {
@@ -66,7 +70,12 @@ public class CartServiceImpl implements CartService {
 		int i = 0;
 		for(Long productId : productIds) {
 			LineItem lineItem = lineItemDao.findByProductIdAndCartId(productId, cartId).get();
-			lineItem.setQuantity(quantities[i]);
+			Product product = lineItem.getProduct();
+			if((product.getQuantity() <= 0L) || (quantities[i] <= 0L)) {
+				lineItemDao.delete(lineItem);
+			} else {
+				updateLineItemQuantity(quantities[i], lineItem, product);
+			}
 			i++;
 		}
 		return findCart(cartId);
@@ -95,5 +104,13 @@ public class CartServiceImpl implements CartService {
 		});
 		cart.getLineItems().clear();
 		return cart;
+	}
+	
+	private void updateLineItemQuantity(Long quantity, LineItem lineItem, Product product) {
+		if(product.getQuantity() <= quantity) {
+			lineItem.setQuantity(product.getQuantity());
+		} else {
+			lineItem.setQuantity(quantity);
+		}
 	}
 }
