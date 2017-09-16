@@ -91,4 +91,12 @@ public class ProductControllerTest {
 		mvc.perform(get("/product/list/category/1?page=1")).andExpect(status().isOk()).andExpect(view().name("home"));
 		verify(productService, times(1)).getProductsByCategoryId(eq(1), Mockito.any(Pageable.class));
 	}
+	
+	@Test
+	public void testShowProductWithQuantityLessOrEqualThanZeroShouldRedirect() throws Exception {
+		product.setQuantity(0L);
+		when(productService.findById(1L)).thenReturn(product);
+		mvc.perform(get("/product/show/1")).andExpect(status().is3xxRedirection());
+		verify(productService, times(1)).findById(1L);
+	}
 }

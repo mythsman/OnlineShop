@@ -30,6 +30,9 @@ public class ProductController {
 	@RequestMapping(value = "/show/{id}", method = RequestMethod.GET)
 	public String getProductById(@PathVariable("id") Long id, Model model) {
 		Product product = productService.findById(id);
+		if (product.getQuantity() <= 0L) {
+			return "redirect:/";
+		}
 		loadCategories(model);
 		model.addAttribute("product", product);
 		return "showProduct";

@@ -1,6 +1,7 @@
 package com.darglk.onlineshop.controller;
 
 import java.math.RoundingMode;
+import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -8,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.darglk.onlineshop.model.Cart;
 import com.darglk.onlineshop.service.CartService;
@@ -25,7 +26,7 @@ public class CartController {
 	@RequestMapping(value="show", method=RequestMethod.GET)
 	public String showCart(Model model, HttpServletRequest httpRequest) {
 		Cart cart = cartService.findCart(findCartIdInSession(httpRequest));
-		if(cart == null) {
+		if(cart == null || (cart.getLineItems().size() <= 0L)) {
 			return "redirect:/";
 		}
 		model.addAttribute("cart", cart);
@@ -34,9 +35,10 @@ public class CartController {
 	}
 	
 	@RequestMapping(value="update", method=RequestMethod.POST)
-	public String updateCart(Model model, HttpServletRequest httpRequest, @RequestAttribute("product_ids[]") Long[] productIds,
-			@RequestAttribute("quantity[]") Long[] quantity) {
-		
+	public String updateCart(Model model, HttpServletRequest httpRequest, @RequestParam("product_ids[]") String[] productIdsStr,
+			@RequestParam("quantity[]") String[] quantityStr) {
+		Long[] productIds = Arrays.stream(productIdsStr).map(Long::parseLong).toArray(Long[]::new);
+		Long[] quantity = Arrays.stream(quantityStr).map(Long::parseLong).toArray(Long[]::new);
 		Long cartId = findCartIdInSession(httpRequest);
 		if(checkIfUpdateCartParamsAreEmptyOrNull(productIds, quantity) || (cartId == null)) {
 			return "redirect:/cart/show";
@@ -67,7 +69,8 @@ public class CartController {
 	}
 	
 	@RequestMapping(value = "/add_to_cart", method = RequestMethod.POST)
-	public String addToCart(@RequestAttribute("product_id") Long id, Model model, HttpServletRequest httpRequest) {
+	public String addToCart(@RequestParam("product_id") String productId, Model model, HttpServletRequest httpRequest) {
+		Long id = Long.parseLong(productId);
 		Cart cart = null;
 		if(httpRequest.getSession().getAttribute("cart_id") == null) {
 			cart = cartService.createCart();

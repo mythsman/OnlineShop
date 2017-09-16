@@ -1,5 +1,6 @@
 package com.darglk.onlineshop;
 
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -9,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.math.BigDecimal;
 
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -25,6 +27,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.darglk.onlineshop.controller.CartController;
 import com.darglk.onlineshop.model.Cart;
+import com.darglk.onlineshop.model.LineItem;
+import com.darglk.onlineshop.model.Product;
 import com.darglk.onlineshop.service.CartService;
 
 import org.junit.Before;
@@ -50,16 +54,38 @@ public class CartControllerTest {
 	
 	private Cart cart;
 	
-	
 	@Before
 	public void setCart() {
 		cart = new Cart();
-		
 	}
 	
 	@Test
 	@WithMockUser(username="johndoe", roles={"USER"})
-	public void testShowCartIsNotNull() throws Exception {
+	public void testShowCartIsNotNullButEmpty() throws Exception {
+		MockHttpSession session = new MockHttpSession();
+		session.setAttribute("cart_id", 1L);
+		when(cartService.findCart(Mockito.anyLong())).thenReturn(cart);
+		mvc.perform(get("/cart/show").session(session)).andExpect(status().is3xxRedirection());
+		verify(cartService, times(1)).findCart(Mockito.anyLong());
+	}
+	
+	@Test
+	@WithMockUser(username="johndoe", roles={"USER"})
+	public void testShowCartIsNotNullAndNotEmpty() throws Exception {
+		
+		Product product = new Product();
+		product.setId(1L);
+		BigDecimal price = new BigDecimal("111.33"); 
+		product.setPrice(price);
+		product.setQuantity(1L);
+		LineItem lineItem = new LineItem();
+		lineItem.setQuantity(1L);
+		
+		cart = new Cart();
+		lineItem.setCart(cart);
+		lineItem.setProduct(product);
+		
+		cart.getLineItems().add(lineItem);
 		MockHttpSession session = new MockHttpSession();
 		session.setAttribute("cart_id", 1L);
 		when(cartService.findCart(Mockito.anyLong())).thenReturn(cart);
@@ -77,37 +103,35 @@ public class CartControllerTest {
 		verify(cartService, times(1)).findCart(Mockito.anyLong());
 	}
 	
-	@Test
+	@Test(expected=IllegalArgumentException.class)
 	@WithMockUser(username="johndoe", roles={"USER"})
-	public void testUpdateCartWithEmptyProductIdsShouldRedirect() throws Exception {
+	public void testUpdateCartWithEmptyProductIdsShouldThrowException() throws Exception {
 		MockHttpSession session = new MockHttpSession();
 		session.setAttribute("cart_id", 1L);
-		Long[] array = {1L};
-		Long[] emptyArray = {};
-		mvc.perform(post("/cart/update").session(session).requestAttr("product_ids[]", emptyArray).requestAttr("quantity[]", array)
-				.with(csrf().asHeader()))
-		.andExpect(status().is3xxRedirection());
+		String[] array = {"1"};
+		String[] emptyArray = {};
+		mvc.perform(post("/cart/update").session(session).param("product_ids[]", emptyArray).param("quantity[]", array)
+				.with(csrf().asHeader()));
 	}
 	
-	@Test
+	@Test(expected=IllegalArgumentException.class)
 	@WithMockUser(username="johndoe", roles={"USER"})
-	public void testUpdateCartWithEmptyQuantitiesShouldRedirect() throws Exception {
+	public void testUpdateCartWithEmptyQuantitiesShouldThrowException() throws Exception {
 		MockHttpSession session = new MockHttpSession();
 		session.setAttribute("cart_id", 1L);
-		Long[] array = {1L};
-		Long[] emptyArray = {};
-		mvc.perform(post("/cart/update").session(session).requestAttr("product_ids[]", array).requestAttr("quantity[]", emptyArray)
-				.with(csrf().asHeader()))
-		.andExpect(status().is3xxRedirection());
+		String[] array = {"1"};
+		String[] emptyArray = {};
+		mvc.perform(post("/cart/update").session(session).param("product_ids[]", array).param("quantity[]", emptyArray)
+				.with(csrf().asHeader()));
 	}
 	
 	@Test
 	@WithMockUser(username="johndoe", roles={"USER"})
 	public void testUpdateCartWithNullCartIdShouldRedirect() throws Exception {
 		MockHttpSession session = new MockHttpSession();
-		Long[] array = {1L};
-		Long[] emptyArray = {};
-		mvc.perform(post("/cart/update").session(session).requestAttr("product_ids[]", array).requestAttr("quantity[]", emptyArray)
+		String[] array = {"1"};
+		
+		mvc.perform(post("/cart/update").session(session).param("product_ids[]", array).param("quantity[]", array)
 				.with(csrf().asHeader()))
 		.andExpect(status().is3xxRedirection());
 	}
@@ -118,10 +142,10 @@ public class CartControllerTest {
 		
 		MockHttpSession session = new MockHttpSession();
 		session.setAttribute("cart_id", 1L);
-		Long[] array = {1L};
+		String[] array = {"1"};
 		
-		when(cartService.updateProductQuantity(1L, array, array)).thenReturn(cart);
-		mvc.perform(post("/cart/update").session(session).requestAttr("product_ids[]", array).requestAttr("quantity[]", array)
+		when(cartService.updateProductQuantity(eq(1L), Mockito.any(Long[].class), Mockito.any(Long[].class))).thenReturn(cart);
+		mvc.perform(post("/cart/update").session(session).param("product_ids[]", array).param("quantity[]", array)
 				.with(csrf().asHeader()))
 		.andExpect(status().isOk()).andExpect(view().name("shoppingCart"));
 	}
@@ -173,7 +197,7 @@ public class CartControllerTest {
 	public void testAddToCartWithNonExistingCart() throws Exception {
 		when(cartService.createCart()).thenReturn(cart);
 		cart.setId(1L);
-		mvc.perform(post("/cart/add_to_cart").requestAttr("product_id", 1L)
+		mvc.perform(post("/cart/add_to_cart").param("product_id", "1")
 				.with(csrf().asHeader())).andExpect(status().is3xxRedirection());
 		verify(cartService, times(1)).createCart();
 		verify(cartService, times(1)).addItemToCart(Mockito.anyLong(), Mockito.anyLong());
@@ -187,7 +211,7 @@ public class CartControllerTest {
 		session.setAttribute("cart_id", 1L);
 		when(cartService.findCart(1L)).thenReturn(cart);
 		
-		mvc.perform(post("/cart/add_to_cart").requestAttr("product_id", 1L).session(session)
+		mvc.perform(post("/cart/add_to_cart").param("product_id", "1").session(session)
 				.with(csrf().asHeader())).andExpect(status().is3xxRedirection());
 		verify(cartService, times(1)).findCart(1L);
 		verify(cartService, times(1)).addItemToCart(Mockito.anyLong(), Mockito.anyLong());
