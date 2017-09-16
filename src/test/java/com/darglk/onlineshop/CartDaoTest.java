@@ -1,5 +1,6 @@
 package com.darglk.onlineshop;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -59,5 +60,13 @@ public class CartDaoTest {
 	public void testFetchCartWithStoredLineItem() {
 		Cart found = cartDao.getOne(cart.getId());
 		assertThat(found.getLineItems().size(), is(1));
+	}
+	
+	@Test
+	public void testGetTotal() {
+		Cart found = cartDao.getOne(cart.getId());
+		BigDecimal expected = product.getPrice();
+		BigDecimal actual = found.totalPrice();
+		assertThat(actual.equals(expected));
 	}
 }

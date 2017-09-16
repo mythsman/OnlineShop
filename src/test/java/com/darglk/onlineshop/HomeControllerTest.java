@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.darglk.onlineshop.controller.HomeController;
 import com.darglk.onlineshop.dao.RoleDao;
 import com.darglk.onlineshop.model.User;
+import com.darglk.onlineshop.service.CategoryService;
 import com.darglk.onlineshop.service.UserService;
 
 
@@ -51,6 +52,9 @@ public class HomeControllerTest {
 	
 	@MockBean
 	private UserService userService;
+	
+	@MockBean
+	private CategoryService categoryService;
 	
 	private User user;
 	
