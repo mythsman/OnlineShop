@@ -33,7 +33,7 @@ public class Product {
 	private String description;
 	
 	@Column(name="quantity", nullable=false)
-	@Min(value=1L)
+	@Min(value=0L)
 	private Long quantity;
 	
 	@Column(name="price", nullable=false)
