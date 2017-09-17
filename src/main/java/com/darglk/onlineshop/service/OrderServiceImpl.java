@@ -86,7 +86,6 @@ public class OrderServiceImpl implements OrderService {
 		}
 		cart.getLineItems().clear();
 		cartDao.save(cart);
-		cartDao.delete(cart);
 		BigDecimal total = new BigDecimal(totalPrice);
 		order.setTotal(total.setScale(2, RoundingMode.HALF_UP));
 	}

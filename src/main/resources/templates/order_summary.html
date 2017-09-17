@@ -17,7 +17,7 @@
         			<tr><th>City</th><td th:text="${order.user.city}"></td></tr>
         			<tr><th>Postal code</th><td th:text="${order.user.postcode}"></td></tr>
         		</table>
-        		<form th:action="@{/order/checkout}" method="post">
+        		<form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
 		            <table class="table table-hover">
 		                <thead>
 		                    <tr>
@@ -66,6 +66,16 @@
 		                        	
 		                        </td>
 		                        <td>
+		                        <input type="hidden" name="business" value="darglk-facilitator@gmail.com" />
+		                        <input type="hidden" name="cmd" value="_xclick" />
+		                        <input type="hidden" name="upload" value="1" />
+		                        <input type="hidden" name="return" value="http://localhost:8080" />
+		                        <input type="hidden" name="invoice" th:attr="value=${order.id}" />
+		                        <input type="hidden" name="amount" th:attr="value=${order.total}" />
+		                        <input type="hidden" name="item_name" value="order in shop" />
+		                        <input type="hidden" name="item_number" th:attr="value=${order.id}" />
+		                        <input type="hidden" name="quantity" value="1" />
+		                        <input type="hidden" name="notify_url" value="http://localhost:8080" />
 		                        <button type="submit" class="btn btn-success btn-sm">
 		                            PayPal <i class="fa fa-play" aria-hidden="true"></i>
 		                        </button></td>
