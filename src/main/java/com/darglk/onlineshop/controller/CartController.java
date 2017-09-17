@@ -1,7 +1,10 @@
 package com.darglk.onlineshop.controller;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.darglk.onlineshop.model.Cart;
+import com.darglk.onlineshop.model.Shipping;
 import com.darglk.onlineshop.service.CartService;
 
 @Controller
@@ -83,6 +87,21 @@ public class CartController {
 			cart = cartService.addItemToCart(cart.getId(), id);
 		}
 		return "redirect:/cart/show";
+	}
+	
+	@RequestMapping(value="/preorder", method=RequestMethod.GET)
+	public String preOrder(HttpServletRequest httpRequest, Model model) {
+		Cart cart = cartService.findCart(findCartIdInSession(httpRequest));
+		
+		List<Shipping> shippingOptions = new ArrayList<>();
+		shippingOptions.add(new Shipping("Postal", new BigDecimal("9.99")));
+		shippingOptions.add(new Shipping("Courier", new BigDecimal("19.99")));
+		shippingOptions.add(new Shipping("Personal", new BigDecimal("0.00")));
+		
+		model.addAttribute("cart", cart);
+		model.addAttribute("shipping", shippingOptions);
+		model.addAttribute("totalPrice", cart.totalPrice().setScale(2, RoundingMode.HALF_UP));
+		return "preorder";
 	}
 	
 	private Long findCartIdInSession(HttpServletRequest httpRequest) {

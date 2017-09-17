@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="common/header :: common-header"/>
+<head th:replace="common/header :: navbar" />
+<!-- Page Content -->
+    <div class="container">
+
+      <div class="row">
+
+        	<div class="col-sm-12">
+        		<form th:action="@{/order/checkout}" method="post">
+		            <table class="table table-hover">
+		                <thead>
+		                    <tr>
+		                        <th>Product</th>
+		                        <th>&nbsp;</th>
+		                        <th>Quantity</th>
+		                        <th class="text-center">Price</th>
+		                        <th class="text-center">Total</th>
+		                        <th> </th>
+		                    </tr>
+		                </thead>
+		                <tbody>
+		                    <tr th:each="lineItem : ${cart.lineItems}">
+		                    	<td><a class="thumbnail pull-left" th:href="@{/product/show/{id}(id=${lineItem.product.id})}"> 
+		                    	<img class="media-object" th:src="${lineItem.product.productImageUrl}" style="width: 72px; height: 72px;"/> </a></td>
+		                        <td class="col-sm-8 col-md-6">
+		                        <div class="media">
+		                            <div class="media-body">
+		                                <h4 class="media-heading"><a th:href="@{/product/show/{id}(id=${lineItem.product.id})}" th:text="${lineItem.product.name}">Product name</a></h4>
+		                            </div>
+		                        </div></td>
+		                        <td class="col-sm-1 col-md-1" style="text-align: center" th:text="${lineItem.quantity}">
+		                        </td>
+		                        <td class="col-sm-1 col-md-1 text-center"><strong th:text="${lineItem.product.price}"></strong></td>
+		                        <td class="col-sm-1 col-md-1 text-center"><strong th:text="${lineItem.product.price * lineItem.quantity}"></strong></td>
+		                        <td class="col-sm-1 col-md-1">
+		                        	&nbsp;
+		                        </td>
+		                    </tr>
+		                </tbody>
+		                <tfoot>
+		                    <tr>
+		                    	<td>   </td>
+		                        <td>   </td>
+		                        <td>   </td>
+		                        <td>   </td>
+		                        <td><h3>Total</h3></td>
+		                        <td class="text-right"><h3 th:text="${totalPrice}"></h3></td>
+		                    </tr>
+		                    <tr>
+		                    	<td>   </td>
+		                        <td>   </td>
+		                        <td>   </td>
+		                        <td><a th:href="@{/cart/show}" class="btn btn-warning btn-sm">back</a>   </td>
+		                        <td>
+		                        	<select name="shipping">
+		                        		<option th:each="shipOption: ${shipping}" th:value="${shipOption.price}" th:text="${#strings.concat(shipOption.price, ' ', shipOption.name)}"></option>
+		                        	</select>
+		                        </td>
+		                        <td>
+		                        <button type="submit" class="btn btn-success btn-sm">
+		                            Place Order <i class="fa fa-play" aria-hidden="true"></i>
+		                        </button></td>
+		                    </tr>
+		                </tfoot>
+		            </table>
+			</form>
+        </div>
+        </div>
+      
+	</div>
+	<!-- /.container -->
+    <div th:replace="common/header :: body-bottom-footer"/>
+    <div th:replace="common/header :: body-bottom-scripts"/>
+</html>
