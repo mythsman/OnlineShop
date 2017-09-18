@@ -8,6 +8,8 @@ import java.time.Instant;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.darglk.onlineshop.dao.CartDao;
@@ -88,5 +90,11 @@ public class OrderServiceImpl implements OrderService {
 		cartDao.save(cart);
 		BigDecimal total = new BigDecimal(totalPrice);
 		order.setTotal(total.setScale(2, RoundingMode.HALF_UP));
+	}
+
+	@Transactional
+	@Override
+	public Page<Order> userOrders(Long userId, Pageable pageable) {
+		return orderDao.findByUserId(userId, pageable);
 	}
 }
