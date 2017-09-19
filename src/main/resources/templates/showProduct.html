@@ -31,8 +31,6 @@
               			<h3 class="card-title" th:text="${product.name}"></h3>
               			<h4 th:text="${#strings.append(product.price, '$')}"></h4>
               			<p class="card-text" th:text="${product.description}"></p>
-              			<span class="text-warning">★ ★ ★ ★ ☆</span>
-              				4.0 stars
             			</div>
             			<form th:action="@{/cart/add_to_cart}" method="post">
                   			<input type="hidden" th:value="${product.id}" name="product_id" />

@@ -100,6 +100,6 @@ public class OrderController {
 			e.printStackTrace();
 		}
 		
-		//mailSender.send(mimeMessage);
+		mailSender.send(mimeMessage);
 	}
 }

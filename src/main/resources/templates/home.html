@@ -67,7 +67,6 @@
                   <p class="card-text" th:text="${#strings.substring(product.description, 0, 100)}"></p>
                 </div>
                 <div class="card-footer">
-                  <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
                   <form th:action="@{/cart/add_to_cart}" method="post">
                   	<input type="hidden" th:value="${product.id}" name="product_id" />
                   	<button type="submit" class="btn btn-warning btn-sm float-right"> 
