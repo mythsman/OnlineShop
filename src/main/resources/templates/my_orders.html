@@ -23,16 +23,16 @@
 					      	<tr th:each="details : ${order.orderDetails}">
 					      		<td th:text="${details.product.name}"></td>
 					      		<td th:text="${details.quantity}"></td>
-					      		<td th:text="${details.product.price}"></td>
+					      		<td th:text="${#strings.concat(details.product.price, '$')}"></td>
 					      	</tr>
 					      	<tr>
 					      		<th>Shipping Cost:</th>
 					      		<td>&nbsp;</td>
-					      		<th th:text="${order.shipping.price}"></th>
+					      		<th th:text="${#strings.concat(order.shipping.price, '$')}"></th>
 					      	</tr>
 					      </table>
 					    </div>
-					    <div class="card-footer text-muted" th:text="${#strings.concat('Total: ', order.totalWithShipping)}">
+					    <div class="card-footer text-muted" th:text="${#strings.concat('Total: ', order.totalWithShipping, '$')}">
   						</div>
 					</div>
 					<br />

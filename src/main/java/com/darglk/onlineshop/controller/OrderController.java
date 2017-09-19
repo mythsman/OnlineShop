@@ -1,13 +1,20 @@
 package com.darglk.onlineshop.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
+import javax.mail.Message.RecipientType;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,6 +48,9 @@ public class OrderController {
 	@Autowired
 	private ShippingService shippingService;
 	
+	@Autowired
+	private JavaMailSender mailSender;
+	
 	@RequestMapping(value="/hook", method=RequestMethod.POST)
 	public String paypalHook(Model model, HttpServletRequest httpRequest) {
 		
@@ -58,6 +68,7 @@ public class OrderController {
                 .getAuthentication().getName());
 		Order order = orderService.placeOrder(cart, shipping, user);
 		FlashMessage.createFlashMessage("info", "Your order has been placed successfully.", model);
+		sendEmailMessageWithOrderList(order, user);
 		model.addAttribute("order", order);
 		return "order_summary";
 	}
@@ -71,5 +82,24 @@ public class OrderController {
 		model.addAttribute("orders", orders);
 		model.addAttribute("page", page);
 		return "my_orders";
+	}
+	
+	private void sendEmailMessageWithOrderList(Order order, User user) {
+		String mailContent = FlashMessage.createOrderContentsMessage(order, user);
+		Session session = null;
+		MimeMessage mimeMessage = new MimeMessage(session);
+		
+		try {
+			mimeMessage.setSubject("Online Shop. Purchase id: " + order.getId());
+			mimeMessage.setRecipient(RecipientType.TO, new InternetAddress(user.getEmail(), "user"));
+			mimeMessage.setContent(mailContent, "text/html");
+			mimeMessage.setFrom("ciprojektwimiip@gmail.com"); //TODO: UPDATE LATER
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		//mailSender.send(mimeMessage);
 	}
 }
