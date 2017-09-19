@@ -60,7 +60,7 @@ public class OrderController {
 	
 	@RequestMapping(value = "/my_orders", method = RequestMethod.GET)
 	public String loadProductsByCategory(Model model, @RequestParam(name="page", defaultValue="0", required=false) Integer page) {
-		Pageable pageable = new PageRequest(page, 6);
+		Pageable pageable = new PageRequest(page, 5);
 		User user = userService.findByUsername(SecurityContextHolder.getContext()
                 .getAuthentication().getName());
 		Page<Order> orders = orderService.userOrders(user.getUserId(), pageable);

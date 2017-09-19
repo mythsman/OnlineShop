@@ -1,6 +1,7 @@
 package com.darglk.onlineshop.model;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.Digits;
 
 @Entity
@@ -49,6 +51,9 @@ public class Order {
 
 	@OneToMany(mappedBy="order")
 	private List<OrderDetails> orderDetails;
+	
+	@Transient
+	private BigDecimal totalWithShipping;
 	
 	public List<OrderDetails> getOrderDetails() {
 		return orderDetails;
@@ -104,6 +109,11 @@ public class Order {
 
 	public void setStatus(OrderStatus status) {
 		this.status = status;
+	}
+	
+	public BigDecimal getTotalWithShipping() {
+		this.totalWithShipping = new BigDecimal(this.total.doubleValue() + this.shipping.doubleValue());
+		return this.totalWithShipping.setScale(2, RoundingMode.HALF_UP);
 	}
 
 	public Order(BigDecimal total, BigDecimal shipping, Date createdAt, User user, OrderStatus status) {

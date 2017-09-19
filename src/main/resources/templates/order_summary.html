@@ -55,7 +55,7 @@
 		                        <td>   </td>
 		                        <td>   </td>
 		                        <td><h3>Total</h3></td>
-		                        <td class="text-right"><h3 th:text="${order.total}"></h3></td>
+		                        <td class="text-right"><h3 th:text="${order.totalWithShipping}"></h3></td>
 		                    </tr>
 		                    <tr>
 		                    	<td>   </td>
@@ -71,7 +71,7 @@
 		                        <input type="hidden" name="upload" value="1" />
 		                        <input type="hidden" name="return" value="http://localhost:8080" />
 		                        <input type="hidden" name="invoice" th:attr="value=${order.id}" />
-		                        <input type="hidden" name="amount" th:attr="value=${order.total}" />
+		                        <input type="hidden" name="amount" th:attr="value=${order.totalWithShipping}" />
 		                        <input type="hidden" name="item_name" value="order in shop" />
 		                        <input type="hidden" name="item_number" th:attr="value=${order.id}" />
 		                        <input type="hidden" name="quantity" value="1" />

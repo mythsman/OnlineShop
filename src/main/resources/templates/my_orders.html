@@ -10,7 +10,7 @@
         	<div class="col-sm-12">
 					<div class="card mb-3" th:each="order : ${orders}">
 					    <div class="card-header">
-					      <p class="panel-title" th:text="${#strings.concat('Order from: ', order.createdAt)}">
+					      <p class="panel-title" th:text="${#strings.concat('Order from: ', order.createdAt, ' Status: ', order.status)}">
 					      </p>
 					    </div>
 					    <div class="card-block">
@@ -32,12 +32,21 @@
 					      	</tr>
 					      </table>
 					    </div>
-					    <div class="card-footer text-muted" th:text="${#strings.concat('Total: ', order.total)}">
+					    <div class="card-footer text-muted" th:text="${#strings.concat('Total: ', order.totalWithShipping)}">
   						</div>
 					</div>
 					<br />
 					<br /><br />
-        	</div>
+					<span th:if="${page gt 0}" class="previous">
+            			<a  th:href="@{/order/my_orders(page=${page - 1})}"
+            			class="btn btn-warning btn-sm float-left" th:text="Previous"></a>
+            		</span>
+            	
+            		<span th:if="${orders.getNumberOfElements() gt 0}">
+            			<a th:href="@{/order/my_orders(page=${page + 1})}"
+            			class="btn btn-warning btn-sm float-right" th:text="Next"></a>
+            		</span>
+        	</div>        		
        </div>
       
 	</div>
