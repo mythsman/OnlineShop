@@ -55,7 +55,7 @@
 		                        <td><a th:href="@{/cart/show}" class="btn btn-warning btn-sm">back</a>   </td>
 		                        <td>
 		                        	<select name="shipping">
-		                        		<option th:each="shipOption: ${shipping}" th:value="${shipOption.price}" th:text="${#strings.concat(shipOption.price, ' ', shipOption.name)}"></option>
+		                        		<option th:each="shipOption: ${shipping}" th:value="${shipOption.name}" th:text="${#strings.concat(shipOption.price, ' ', shipOption.name)}"></option>
 		                        	</select>
 		                        </td>
 		                        <td>

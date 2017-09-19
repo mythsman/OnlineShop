@@ -10,12 +10,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,9 +36,9 @@ public class Order {
 	@Digits(integer = 10, fraction = 2)
 	private BigDecimal total;
 	
-	@Column(name="shipping", nullable=false)
-	@Digits(integer = 10, fraction = 2)
-	private BigDecimal shipping;
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="shipping_id")
+	private Shipping shipping;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdAt;
@@ -79,11 +81,11 @@ public class Order {
 		this.total = total;
 	}
 
-	public BigDecimal getShipping() {
+	public Shipping getShipping() {
 		return shipping;
 	}
 
-	public void setShipping(BigDecimal shipping) {
+	public void setShipping(Shipping shipping) {
 		this.shipping = shipping;
 	}
 
@@ -112,11 +114,11 @@ public class Order {
 	}
 	
 	public BigDecimal getTotalWithShipping() {
-		this.totalWithShipping = new BigDecimal(this.total.doubleValue() + this.shipping.doubleValue());
+		this.totalWithShipping = new BigDecimal(this.total.doubleValue() + this.shipping.getPrice().doubleValue());
 		return this.totalWithShipping.setScale(2, RoundingMode.HALF_UP);
 	}
 
-	public Order(BigDecimal total, BigDecimal shipping, Date createdAt, User user, OrderStatus status) {
+	public Order(BigDecimal total, Shipping shipping, Date createdAt, User user, OrderStatus status) {
 		this.orderDetails = new ArrayList<OrderDetails>();
 		this.total = total;
 		this.shipping = shipping;

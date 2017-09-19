@@ -23,6 +23,7 @@ import com.darglk.onlineshop.model.Order;
 import com.darglk.onlineshop.model.OrderDetails;
 import com.darglk.onlineshop.model.OrderStatus;
 import com.darglk.onlineshop.model.Product;
+import com.darglk.onlineshop.model.Shipping;
 import com.darglk.onlineshop.model.User;
 
 @Service
@@ -45,9 +46,9 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Override
 	@Transactional
-	public Order placeOrder(Cart cart, BigDecimal shipping, User user) {
+	public Order placeOrder(Cart cart, Shipping shipping, User user) {
 		Order order = new Order(cart.totalPrice().setScale(2, RoundingMode.HALF_UP)
-				, shipping.setScale(2, RoundingMode.HALF_UP), Date.from(Instant.now()),
+				, shipping, Date.from(Instant.now()),
 				user, OrderStatus.BEGIN);
 		setOrderedProducts(cart, order);
 		return orderDao.save(order);
@@ -56,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	@Transactional
 	public BigDecimal totalOrderPriceWithShipping(Order order) {
-		return new BigDecimal(order.getShipping().doubleValue() + order.getTotal().doubleValue());
+		return new BigDecimal(order.getShipping().getPrice().doubleValue() + order.getTotal().doubleValue());
 	}
 	
 	@Transactional

@@ -1,8 +1,6 @@
 package com.darglk.onlineshop.controller;
 
-import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.darglk.onlineshop.model.Cart;
 import com.darglk.onlineshop.model.Shipping;
 import com.darglk.onlineshop.service.CartService;
+import com.darglk.onlineshop.service.ShippingService;
 
 @Controller
 @RequestMapping("/cart")
@@ -26,6 +25,9 @@ public class CartController {
 
 	@Autowired
 	private CartService cartService;
+	
+	@Autowired
+	private ShippingService shippingService;
 	
 	@RequestMapping(value="show", method=RequestMethod.GET)
 	public String showCart(Model model, HttpServletRequest httpRequest) {
@@ -93,10 +95,7 @@ public class CartController {
 	public String preOrder(HttpServletRequest httpRequest, Model model) {
 		Cart cart = cartService.findCart(findCartIdInSession(httpRequest));
 		
-		List<Shipping> shippingOptions = new ArrayList<>();
-		shippingOptions.add(new Shipping("Postal", new BigDecimal("9.99")));
-		shippingOptions.add(new Shipping("Courier", new BigDecimal("19.99")));
-		shippingOptions.add(new Shipping("Personal", new BigDecimal("0.00")));
+		List<Shipping> shippingOptions = shippingService.findAllShippings();
 		
 		model.addAttribute("cart", cart);
 		model.addAttribute("shipping", shippingOptions);

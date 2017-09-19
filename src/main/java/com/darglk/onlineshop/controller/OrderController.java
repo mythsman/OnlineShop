@@ -1,6 +1,5 @@
 package com.darglk.onlineshop.controller;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.darglk.onlineshop.helpers.FlashMessage;
 import com.darglk.onlineshop.model.Cart;
 import com.darglk.onlineshop.model.Order;
+import com.darglk.onlineshop.model.Shipping;
 import com.darglk.onlineshop.model.User;
 import com.darglk.onlineshop.service.CartService;
 import com.darglk.onlineshop.service.OrderService;
+import com.darglk.onlineshop.service.ShippingService;
 import com.darglk.onlineshop.service.UserService;
 
 @Controller
@@ -37,6 +38,9 @@ public class OrderController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private ShippingService shippingService;
+	
 	@RequestMapping(value="/hook", method=RequestMethod.POST)
 	public String paypalHook(Model model, HttpServletRequest httpRequest) {
 		
@@ -47,8 +51,8 @@ public class OrderController {
 	}
 	
 	@RequestMapping(value="/checkout", method=RequestMethod.POST)
-	public String checkout(Model model, HttpServletRequest httpRequest, @RequestParam("shipping") String shippingCost) {
-		BigDecimal shipping = new BigDecimal(shippingCost);
+	public String checkout(Model model, HttpServletRequest httpRequest, @RequestParam("shipping") String shippingName) {
+		Shipping shipping = shippingService.findByName(shippingName);
 		Cart cart = cartService.findCart((Long)httpRequest.getSession().getAttribute("cart_id"));
 		User user = userService.findByUsername(SecurityContextHolder.getContext()
                 .getAuthentication().getName());
