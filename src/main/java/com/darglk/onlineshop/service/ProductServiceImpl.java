@@ -1,9 +1,11 @@
 package com.darglk.onlineshop.service;
 
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -32,5 +34,11 @@ public class ProductServiceImpl implements ProductService {
 	@Transactional
 	public Page<Product> getProductsByCategoryId(Integer categoryId, Pageable pageable) {
 		return productDao.findByCategoryId((long)categoryId, pageable);
+	}
+	
+	@Override
+	@Transactional
+	public Page<Product> getSixLatestProducts() {
+		return productDao.findByTerm("", new PageRequest(0, 6));
 	}
 }

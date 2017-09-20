@@ -68,7 +68,7 @@ public class OrderController {
                 .getAuthentication().getName());
 		Order order = orderService.placeOrder(cart, shipping, user);
 		FlashMessage.createFlashMessage("info", "Your order has been placed successfully.", model);
-		//sendEmailMessageWithOrderList(order, user);
+		sendEmailMessageWithOrderList(order, user);
 		httpRequest.getSession().setAttribute("cartQuantity", cart.getLineItems().size());
 		model.addAttribute("order", order);
 		return "order_summary";
