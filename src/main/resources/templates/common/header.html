@@ -42,7 +42,14 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 	              <a class="nav-link" href="#">Services</a>
 	            </li>
 	          </ul>
-	          <ul class="navbar-nav">   
+	          <ul class="navbar-nav">
+	          	<li class="nav-item">
+	          		<a class="nav-link" th:href="@{/cart/show}" 
+	          		th:if="${session.containsKey('cart_id') and session.cartQuantity > 0}"
+	          		th:text="${#strings.concat('Shopping Cart(', session.cartQuantity, ')')}"></a>
+	          		<a class="nav-link" href="#" 
+	          		th:unless="${session.containsKey('cart_id') and session.cartQuantity > 0}">Cart is empty</a>
+	          	</li>   
 	            <li class="nav-item" sec:authorize="!isAuthenticated()">
 	              <a class="nav-link" th:href="@{/signin}">Sign In</a>
 	            </li>

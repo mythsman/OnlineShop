@@ -51,6 +51,7 @@ public class CartController {
 		}
 		Cart cart = cartService.updateProductQuantity(cartId, productIds, quantity);
 		
+		httpRequest.getSession().setAttribute("cartQuantity", cart.getLineItems().size());
 		model.addAttribute("cart", cart);
 		model.addAttribute("totalPrice", cart.totalPrice().setScale(2, RoundingMode.HALF_UP));
 		return "shoppingCart";
@@ -62,6 +63,7 @@ public class CartController {
 		if((cart != null) && (id != null)) {
 			cartService.removeItemFromCart(id);
 		}
+		httpRequest.getSession().setAttribute("cartQuantity", cart.getLineItems().size());
 		return "redirect:/cart/show";
 	}
 	
@@ -88,6 +90,7 @@ public class CartController {
 		if(id != null) {
 			cart = cartService.addItemToCart(cart.getId(), id);
 		}
+		httpRequest.getSession().setAttribute("cartQuantity", cart.getLineItems().size());
 		return "redirect:/cart/show";
 	}
 	
