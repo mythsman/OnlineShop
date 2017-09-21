@@ -7,6 +7,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +21,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -24,8 +32,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.darglk.onlineshop.controller.HomeController;
 import com.darglk.onlineshop.dao.RoleDao;
+import com.darglk.onlineshop.model.Product;
 import com.darglk.onlineshop.model.User;
 import com.darglk.onlineshop.service.CategoryService;
+import com.darglk.onlineshop.service.ProductService;
 import com.darglk.onlineshop.service.UserService;
 
 
@@ -55,6 +65,9 @@ public class HomeControllerTest {
 	
 	@MockBean
 	private CategoryService categoryService;
+	
+	@MockBean
+	private ProductService productService;
 	
 	private User user;
 	
@@ -136,6 +149,15 @@ public class HomeControllerTest {
 	
 	@Test
 	public void testGetIndexPage() throws Exception {
+		Product[] products = Stream.generate(Product::new).limit(6).toArray(Product[]::new);
+		for(Product product : products) {
+			product.setPrice(new BigDecimal("11.11"));
+			product.setDescription("ABCDEFABCDEFABCDEFABCDEFABCDEFABCDEFABCDEFABCDEFABCDEFABCDEFABCDEFABCD"
+					+ "ABCDEFABCDEFABCDEFABCDEFABCDEFABCDEFABCDEFABCDEFABCDEFABCDEFABCDEFEF");
+		}
+		List<Product> listOfProducts = new ArrayList<>(Arrays.asList(products));
+		Page<Product> page = new PageImpl<>(listOfProducts);
+		when(productService.getSixLatestProducts()).thenReturn(page);
 		mvc.perform(get("/")
 				.contentType(MediaType.TEXT_HTML)				
 				)

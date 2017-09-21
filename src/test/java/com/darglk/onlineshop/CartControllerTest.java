@@ -30,6 +30,7 @@ import com.darglk.onlineshop.model.Cart;
 import com.darglk.onlineshop.model.LineItem;
 import com.darglk.onlineshop.model.Product;
 import com.darglk.onlineshop.service.CartService;
+import com.darglk.onlineshop.service.ShippingService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -51,6 +52,9 @@ public class CartControllerTest {
 	
 	@MockBean
 	private CartService cartService;
+	
+	@MockBean
+	private ShippingService shippingService;
 	
 	private Cart cart;
 	
@@ -196,6 +200,7 @@ public class CartControllerTest {
 	@WithMockUser(username="johndoe", roles={"USER"})
 	public void testAddToCartWithNonExistingCart() throws Exception {
 		when(cartService.createCart()).thenReturn(cart);
+		when(cartService.addItemToCart(Mockito.anyLong(), Mockito.anyLong())).thenReturn(cart);
 		cart.setId(1L);
 		mvc.perform(post("/cart/add_to_cart").param("product_id", "1")
 				.with(csrf().asHeader())).andExpect(status().is3xxRedirection());
@@ -210,7 +215,7 @@ public class CartControllerTest {
 		MockHttpSession session = new MockHttpSession();
 		session.setAttribute("cart_id", 1L);
 		when(cartService.findCart(1L)).thenReturn(cart);
-		
+		when(cartService.addItemToCart(Mockito.anyLong(), Mockito.anyLong())).thenReturn(cart);
 		mvc.perform(post("/cart/add_to_cart").param("product_id", "1").session(session)
 				.with(csrf().asHeader())).andExpect(status().is3xxRedirection());
 		verify(cartService, times(1)).findCart(1L);

@@ -62,8 +62,8 @@ public class CartController {
 		Cart cart = cartService.findCart(findCartIdInSession(httpRequest));
 		if((cart != null) && (id != null)) {
 			cartService.removeItemFromCart(id);
-		}
-		httpRequest.getSession().setAttribute("cartQuantity", cart.getLineItems().size());
+			httpRequest.getSession().setAttribute("cartQuantity", cart.getLineItems().size());
+		}		
 		return "redirect:/cart/show";
 	}
 	

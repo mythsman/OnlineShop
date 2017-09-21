@@ -62,6 +62,7 @@ public class CartServiceTest {
 	public void testAddItemToCartWhenCartIdIsNull() {
 		Product product = new Product();
 		product.setId(1L);
+		product.setQuantity(1L);
 		LineItem lineItem = new LineItem();
 		lineItem.setQuantity(1L);
 		
@@ -85,6 +86,7 @@ public class CartServiceTest {
 	public void testAddItemToCartWhenCartIdIsNotNull() {
 		Product product = new Product();
 		product.setId(1L);
+		product.setQuantity(1L);
 		LineItem lineItem = new LineItem();
 		lineItem.setQuantity(1L);
 		
@@ -116,9 +118,12 @@ public class CartServiceTest {
 		Long cartId = 1L;
 		Long[] productIds = {3L};
 		Long[] quantities = {3L};
-		
+		Product product = new Product();
+		product.setId(1L);
+		product.setQuantity(1L);
 		LineItem lineItem = new LineItem();
 		lineItem.setQuantity(1L);
+		lineItem.setProduct(product);
 		Optional<LineItem> optional = Optional.of(lineItem);
 		when(lineItemDao.findByProductIdAndCartId(3L, 1L)).thenReturn(optional);
 		cartService.updateProductQuantity(cartId, productIds, quantities);
