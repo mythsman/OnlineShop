@@ -44,7 +44,7 @@ import com.darglk.onlineshop.service.UserService;
 public class HomeControllerTest {
 	
 	@TestConfiguration
-	static class TestUserServiceContextConfiguration {
+	static class TestHomeControllerContextConfiguration {
 		@Bean
 		public DefaultWebSecurityExpressionHandler expressionHandler() {
 			return new DefaultWebSecurityExpressionHandler();

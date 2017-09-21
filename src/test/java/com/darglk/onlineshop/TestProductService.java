@@ -1,6 +1,7 @@
 package com.darglk.onlineshop;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,6 +13,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -98,5 +100,12 @@ public class TestProductService {
 		Page<Product> found = productService.getProductsByCategoryId((int)1L, pageable);
 		verify(productDao, times(1)).findByCategoryId(1L, pageable);
 		assertTrue(found.getContent().equals(listOfProducts));
+	}
+	
+	@Test
+	public void testGetSixLatestProducts() {
+		
+		productService.getSixLatestProducts();
+		verify(productDao, times(1)).findByTerm(eq(""), Mockito.any(PageRequest.class));
 	}
 }

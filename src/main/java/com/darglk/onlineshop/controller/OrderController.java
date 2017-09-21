@@ -1,7 +1,6 @@
 package com.darglk.onlineshop.controller;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
@@ -51,14 +50,14 @@ public class OrderController {
 	@Autowired
 	private JavaMailSender mailSender;
 	
-	@RequestMapping(value="/hook", method=RequestMethod.POST)
+	/*@RequestMapping(value="/hook", method=RequestMethod.POST)
 	public String paypalHook(Model model, HttpServletRequest httpRequest) {
 		
 		httpRequest.getParameterMap().forEach((key, value) -> {
 			System.out.println("Key: " + key + " values: " + Arrays.toString(value));
 		});
 		return "thankyou";
-	}
+	}*/
 	
 	@RequestMapping(value="/checkout", method=RequestMethod.POST)
 	public String checkout(Model model, HttpServletRequest httpRequest, @RequestParam("shipping") String shippingName) {
@@ -75,7 +74,7 @@ public class OrderController {
 	}
 	
 	@RequestMapping(value = "/my_orders", method = RequestMethod.GET)
-	public String loadProductsByCategory(Model model, @RequestParam(name="page", defaultValue="0", required=false) Integer page) {
+	public String showMyOrders(Model model, @RequestParam(name="page", defaultValue="0", required=false) Integer page) {
 		Pageable pageable = new PageRequest(page, 5);
 		User user = userService.findByUsername(SecurityContextHolder.getContext()
                 .getAuthentication().getName());

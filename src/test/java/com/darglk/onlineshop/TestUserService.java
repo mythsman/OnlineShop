@@ -223,4 +223,19 @@ public class TestUserService {
 		userService.checkEqualityOfPasswords(user, errorMsg);
 		assertThat(errorMsg.size(), is(0));
 	}
+	
+	@Test
+	public void testUpdateUserPassword() {
+		String hashedPass = "hashedPassword";
+		user = Mockito.mock(User.class);
+		when(user.getPassword()).thenReturn("password");
+		when(passwordEncoder.encode("password")).thenReturn(hashedPass);
+		
+		userService.updateUserPassword(user);
+		
+		verify(passwordEncoder, times(1)).encode("password");
+		verify(user, times(1)).setPassword(hashedPass);
+		verify(user, times(1)).getPassword();
+		verify(userDao, times(1)).save(user);
+	}
 }
