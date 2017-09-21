@@ -11,6 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -29,6 +31,7 @@ import com.darglk.onlineshop.controller.CartController;
 import com.darglk.onlineshop.model.Cart;
 import com.darglk.onlineshop.model.LineItem;
 import com.darglk.onlineshop.model.Product;
+import com.darglk.onlineshop.model.Shipping;
 import com.darglk.onlineshop.service.CartService;
 import com.darglk.onlineshop.service.ShippingService;
 
@@ -220,5 +223,23 @@ public class CartControllerTest {
 				.with(csrf().asHeader())).andExpect(status().is3xxRedirection());
 		verify(cartService, times(1)).findCart(1L);
 		verify(cartService, times(1)).addItemToCart(Mockito.anyLong(), Mockito.anyLong());
+	}
+	
+	@Test
+	@WithMockUser(username="johndoe", roles={"USER"})
+	public void testPreorder() throws Exception {
+		List<Shipping> listOfShippings = new ArrayList<>();
+		listOfShippings.add(new Shipping("shipping", new BigDecimal("11.11")));
+		cart.setId(1L);
+		MockHttpSession session = new MockHttpSession();
+		session.setAttribute("cart_id", 1L);
+		when(cartService.findCart(1L)).thenReturn(cart);
+		when(shippingService.findAllShippings()).thenReturn(listOfShippings);
+		
+		mvc.perform(get("/cart/preorder").session(session)
+				.with(csrf().asHeader())).andExpect(status().isOk()).andExpect(view().name("preorder"));
+		
+		verify(cartService, times(1)).findCart(1L);
+		verify(shippingService, times(1)).findAllShippings();
 	}
 }

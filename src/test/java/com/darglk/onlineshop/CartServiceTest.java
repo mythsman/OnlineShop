@@ -108,6 +108,23 @@ public class CartServiceTest {
 	}
 	
 	@Test
+	public void testAddItemToCartWhenCartIdIsNotNullAndRequestedProductQuantityIsEqualToZero() {
+		Product product = new Product();
+		product.setId(1L);
+		product.setQuantity(0L);
+		
+		cart = new Cart();
+		
+		when(cartDao.findOne(1L)).thenReturn(cart);
+		when(cartDao.save(Mockito.any(Cart.class))).thenReturn(cart);
+		when(productDao.findOne(1L)).thenReturn(product);
+		
+		Cart savedCart = cartService.addItemToCart(1L, 1L);
+		verify(cartDao, times(1)).findOne(1L);
+		assertThat(savedCart.getLineItems().size(), is(0));
+	}
+	
+	@Test
 	public void testFindCart() {
 		cartService.findCart(1L);
 		verify(cartDao, times(1)).findOne(1L);
@@ -121,6 +138,43 @@ public class CartServiceTest {
 		Product product = new Product();
 		product.setId(1L);
 		product.setQuantity(1L);
+		LineItem lineItem = new LineItem();
+		lineItem.setQuantity(1L);
+		lineItem.setProduct(product);
+		Optional<LineItem> optional = Optional.of(lineItem);
+		when(lineItemDao.findByProductIdAndCartId(3L, 1L)).thenReturn(optional);
+		cartService.updateProductQuantity(cartId, productIds, quantities);
+		verify(lineItemDao, times(1)).findByProductIdAndCartId(3L, 1L);
+		verify(cartDao, times(1)).findOne(1L);
+	}
+	
+	@Test
+	public void testUpdateProductQuantityWhichIsEqualToZero() {
+		Long cartId = 1L;
+		Long[] productIds = {3L};
+		Long[] quantities = {3L};
+		Product product = new Product();
+		product.setId(1L);
+		product.setQuantity(0L);
+		LineItem lineItem = new LineItem();
+		lineItem.setQuantity(1L);
+		lineItem.setProduct(product);
+		Optional<LineItem> optional = Optional.of(lineItem);
+		when(lineItemDao.findByProductIdAndCartId(3L, 1L)).thenReturn(optional);
+		cartService.updateProductQuantity(cartId, productIds, quantities);
+		verify(lineItemDao, times(1)).findByProductIdAndCartId(3L, 1L);
+		verify(lineItemDao, times(1)).delete(lineItem);
+		verify(cartDao, times(1)).findOne(1L);
+	}
+	
+	@Test
+	public void testUpdateProductQuantityWithNewQuantityIsLessThanProductQuantity() {
+		Long cartId = 1L;
+		Long[] productIds = {3L};
+		Long[] quantities = {3L};
+		Product product = new Product();
+		product.setId(1L);
+		product.setQuantity(4L);
 		LineItem lineItem = new LineItem();
 		lineItem.setQuantity(1L);
 		lineItem.setProduct(product);
