@@ -65,7 +65,7 @@
                     <a th:href="@{/product/show/{id}(id=${product.id})}" th:text="${product.name}"></a>
                   </h4>
                   <h5 th:text="${#strings.append(product.price, '$')}"></h5>
-                  <p class="card-text" th:text="${#strings.substring(product.description, 0, 100)}"></p>
+                  <p class="card-text" th:text="${product.description}"></p>
                 </div>
                 <div class="card-footer">
                   <form th:action="@{/cart/add_to_cart}" method="post">

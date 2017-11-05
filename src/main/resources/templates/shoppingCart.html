@@ -1,82 +1,90 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head th:replace="common/header :: common-header"/>
-<head th:replace="common/header :: navbar" />
+<head th:replace="common/header :: navbar"/>
 <!-- Page Content -->
-    <div class="container">
+<div class="container">
 
-      <div class="row">
+    <div class="row">
 
-        	<div class="col-sm-12">
-        		<form th:action="@{/cart/update}" method="post">
-		            <table class="table table-hover">
-		                <thead>
-		                    <tr>
-		                        <th>Product</th>
-		                        <th>&nbsp;</th>
-		                        <th>Quantity</th>
-		                        <th class="text-center">Price</th>
-		                        <th class="text-center">Total</th>
-		                        <th> </th>
-		                    </tr>
-		                </thead>
-		                <tbody>
-		                    <tr th:each="lineItem : ${cart.lineItems}">
-		                    	<td><a class="thumbnail pull-left" th:href="@{/product/show/{id}(id=${lineItem.product.id})}"> 
-		                    	<img class="media-object" th:src="${lineItem.product.productImageUrl}" style="width: 72px; height: 72px;"/> </a></td>
-		                        <td class="col-sm-8 col-md-6">
-		                        <div class="media">
-		                            <div class="media-body">
-		                                <h4 class="media-heading"><a th:href="@{/product/show/{id}(id=${lineItem.product.id})}" th:text="${lineItem.product.name}">Product name</a></h4>
-		                                <span>Status: </span><span class="text-success"><strong>In Stock</strong></span>
-		                            </div>
-		                        </div></td>
-		                        <td class="col-sm-1 col-md-1" style="text-align: center">
-		                        	<input type="hidden" name="product_ids[]" th:attr="value=${lineItem.product.id}" />
-		                        	<input type="number" min="1" class="form-control" th:attr="name=quantity[], value=${lineItem.quantity}, max=${lineItem.product.quantity}" />
-		                        </td>
-		                        <td class="col-sm-1 col-md-1 text-center"><strong th:text="${#strings.concat(lineItem.product.price, '$')}"></strong></td>
-		                        <td class="col-sm-1 col-md-1 text-center"><strong th:text="${#strings.concat(lineItem.product.price * lineItem.quantity, '$')}"></strong></td>
-		                        <td class="col-sm-1 col-md-1">
-		                        <a th:href="@{/cart/removeItem/{id}(id=${lineItem.id})}" class="btn btn-danger">
-		                            <i class="fa fa-ban" aria-hidden="true"></i> Remove
-		                        </a></td>
-		                    </tr>
-		                </tbody>
-		                <tfoot>
-		                    <tr>
-		                    	<td>   </td>
-		                        <td>   </td>
-		                        <td>   </td>
-		                        <td>   </td>
-		                        <td><h3>Total</h3></td>
-		                        <td class="text-right"><h3 th:text="${#strings.concat(totalPrice, '$')}"></h3></td>
-		                    </tr>
-		                    <tr>
-		                    	<td>   </td>
-		                        <td>   </td>
-		                        <td>   </td>
-		                        <td><a th:href="@{/cart/clearCart}" class="btn btn-warning btn-sm">Clear cart</a>   </td>
-		                        <td>
-		                        <button type="submit" class="btn btn-info btn-sm">
-		                        	<i class="fa fa-refresh" aria-hidden="true"></i> Update Cart
-		                        </button>
-		                        <a th:href="@{/product/list}" class="btn btn-default btn-sm">
-		                            <i class="fa fa-shopping-cart" aria-hidden="true"></i> Continue Shopping
-		                        </a></td>
-		                        <td>
-		                        <a th:href="@{/cart/preorder}" class="btn btn-success btn-sm">
-		                            Checkout <i class="fa fa-play" aria-hidden="true"></i>
-		                        </a></td>
-		                    </tr>
-		                </tfoot>
-		            </table>
-			</form>
+        <div class="col-sm-12">
+            <form th:action="@{/cart/update}" method="post">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>&nbsp;</th>
+                        <th>Quantity</th>
+                        <th class="text-center">Price</th>
+                        <th class="text-center">Total</th>
+                        <th> </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="lineItem : ${cart.lineItems}">
+                        <td><a class="thumbnail pull-left" th:href="@{/product/show/{id}(id=${lineItem.product.id})}">
+                            <img class="media-object" th:src="${lineItem.product.productImageUrl}"
+                                 style="width: 72px; height: 72px;"/> </a></td>
+                        <td class="col-sm-8 col-md-6">
+                            <div class="media">
+                                <div class="media-body">
+                                    <h4 class="media-heading"><a
+                                            th:href="@{/product/show/{id}(id=${lineItem.product.id})}"
+                                            th:text="${lineItem.product.name}">Product name</a></h4>
+                                    <span>Status: </span><span class="text-success"><strong>In Stock</strong></span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="col-sm-1 col-md-1" style="text-align: center">
+                            <input type="hidden" name="product_ids[]" th:attr="value=${lineItem.product.id}"/>
+                            <input type="number" min="1" class="form-control"
+                                   th:attr="name=quantity[], value=${lineItem.quantity}, max=${lineItem.product.quantity}"/>
+                        </td>
+                        <td class="col-sm-1 col-md-1 text-center"><strong
+                                th:text="${#strings.concat(lineItem.product.price, '$')}"></strong></td>
+                        <td class="col-sm-1 col-md-1 text-center"><strong
+                                th:text="${#strings.concat(lineItem.product.price * lineItem.quantity, '$')}"></strong>
+                        </td>
+                        <td class="col-sm-1 col-md-1">
+                            <a th:href="@{/cart/removeItem/{id}(id=${lineItem.id})}" class="btn btn-danger">
+                                <i class="fa fa-ban" aria-hidden="true"></i> Remove
+                            </a></td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td>  </td>
+                        <td>  </td>
+                        <td>  </td>
+                        <td>  </td>
+                        <td><h3>Total</h3></td>
+                        <td class="text-right"><h3 th:text="${#strings.concat(totalPrice, '$')}"></h3></td>
+                    </tr>
+                    <tr>
+                        <td>  </td>
+                        <td>  </td>
+                        <td>  </td>
+                        <td><a th:href="@{/cart/clearCart}" class="btn btn-warning btn-sm">Clear cart</a>  </td>
+                        <td>
+                            <button type="submit" class="btn btn-info btn-sm">
+                                <i class="fa fa-refresh" aria-hidden="true"></i> Update Cart
+                            </button>
+                            <a th:href="@{/product/list}" class="btn btn-default btn-sm">
+                                <i class="fa fa-shopping-cart" aria-hidden="true"></i> Continue Shopping
+                            </a></td>
+                        <td>
+                            <a th:href="@{/cart/preorder}" class="btn btn-success btn-sm">
+                                Checkout <i class="fa fa-play" aria-hidden="true"></i>
+                            </a></td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </form>
         </div>
-        </div>
-      
-	</div>
-	<!-- /.container -->
-    <div th:replace="common/header :: body-bottom-footer"/>
-    <div th:replace="common/header :: body-bottom-scripts"/>
+    </div>
+
+</div>
+<!-- /.container -->
+<div th:replace="common/header :: body-bottom-footer"/>
+<div th:replace="common/header :: body-bottom-scripts"/>
 </html>
